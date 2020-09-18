@@ -6,7 +6,7 @@ Samantha Walkow / samwalkow / ??
 
 Rajath John / jrajath94 / ??
 
-Vel (Tien-Yun) Wu / velwu / ??
+Vel (Tien-Yun) Wu / velwu / tienyun2
 
 ### link to assignment instructions:
 https://learn.illinois.edu/mod/assign/view.php?id=4826892
