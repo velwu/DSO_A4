@@ -8,3 +8,6 @@ Vel (Tien-Yun) Wu / velwu / ??
 
 ### link to assignment instructions:
 https://learn.illinois.edu/mod/assign/view.php?id=4826892
+
+
+![Snapshot Image 1](https://github.com/velwu/DSO_A4/blob/master/TTT_image_for_fun.jpg)
