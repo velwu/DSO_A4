@@ -1,5 +1,5 @@
 
-# 4 x 4 Tic Tac Toe
+# 4 x 4 Tic Tac Toe Due Friday
 
 ## Rules:
 

@@ -1,4 +1,4 @@
-
+# board as 1D array
 # board as dict?
 
 board = {}

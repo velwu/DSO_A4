@@ -1,4 +1,5 @@
 ## create tree
+## create infinite nodes in tree
 
 # create class for each node in the tree, not whole tree
 # all trees are graphs, no loops (can't be cyclical), directed, top down
