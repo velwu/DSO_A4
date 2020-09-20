@@ -38,6 +38,7 @@ def generate_next_move():
     # travel back up the tree
     print("new move")
 
+# Maybe should a class?
 def matchboxes():
     matchbox = list()
     bead = str
