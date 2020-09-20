@@ -1,22 +1,5 @@
 # board as 1D array
-# board as dict?
 
-board = {}
-
-for i in range(1, 17):
-    if i not in board:
-        board[i] = ""
-print(board)
-
-for tile in range(len(board)):
-    tile =
-
-
-class Tile:
-
-    def __init__(self, position, move):
-        self.position =position
-        self.move = move
 
 class GameState:
 
@@ -52,12 +35,16 @@ def validate_moves():
 
 def generate_next_move():
     # keep track of last move
+    # travel back up the tree
     print("new move")
 
 def matchboxes():
     matchbox = list()
     bead = str
+    # keep track of failures and success
+    # get rid of the failures and keep success
     print("learning with matchboxes")
 
 def output():
+    # number of games run and loss and wins?
     print("Finished Game")
