@@ -1,26 +1,56 @@
+from random import choices
+
 # board as 1D array
 
+class TheBoard:
+    def __init__(self, board_state_key):
+        self.state_id = board_state_key
+        self.board_state = ["-", "-", "-", "-",
+                            "-", "-", "-", "-",
+                            "-", "-", "-", "-",
+                            "-", "-", "-", "-"]
 
-class GameState:
+    def set_player_move(self, player_symbol, position):
+        self.board_state[position] = player_symbol
 
-    def __init__(self, board_status, turn_number, player):
-        self.board_status = board_status
-        self.turn_number = turn_number
-        self.player = player
-        self.legal_next_move = []
+#TODO: Decide which data structure to use for board states.
+# Board state 2: A dictating dictionary~
+board_new = {
+    "key": 0,
+    "state": [
+        "-", "-", "-", "-",
+        "-", "-", "-", "-",
+        "-", "-", "-", "-",
+        "-", "-", "-", "-"
+    ]
+}
 
-class Node:
 
-    def __init__(self, move: int, game_state='GameState'):
-        self.move = move
-        self.game_state = game_state
-        self.parent = None
-        self.children = []
-
-    def append_child(self, child: "Node"):
-        self.children.append(child)
-        child.parent = self
-
+# class GameState:
+#
+#     def __init__(self, board_status, turn_number, player):
+#         self.board_status = board_status
+#         self.turn_number = turn_number
+#         self.player = player
+#         self.legal_next_move = []
+#
+# class Node(GameState):
+#
+#     def __init__(self, move: int, game_state="GameState"):
+#         super().__init__(self)
+#         self.move = move
+#         self.game_state = game_state
+#         self.parent = None
+#         self.children = []
+#
+#     def append_child(self, child: "Node"):
+#         self.children.append(child)
+#         child.parent = self
+#
+# first_board = TheBoard(0)
+# # print(first_board.board_state)
+# test = Node(1)
+# print(test.player)
 
 def final_move():
     # conditions for a win, draw, and loss
@@ -39,6 +69,9 @@ def generate_next_move():
     print("new move")
 
 # Maybe should a class?
+
+# we also need  a way to track duplicate situations
+
 def matchboxes():
     matchbox = list()
     bead = str
@@ -49,3 +82,48 @@ def matchboxes():
 def output():
     # number of games run and loss and wins?
     print("Finished Game")
+
+def random_player(board):
+    for x in range(1,17):
+        print(x)
+        choice = choices(['X', 'O'])
+        board.set_player_move(choice, x)
+        return board
+
+
+
+class Node():
+
+    def __init__(self, move: int, board_status, turn_number:int, player:str, game_state="game_state",):
+        self.move = move
+        self.game_state = game_state
+        self.parent = None
+        self.children = []
+        self.board_status = board_status
+        self.turn_number = turn_number
+        self.player = player
+        self.legal_next_move = []
+
+    def append_child(self, child: "Node"):
+        self.children.append(child)
+        child.parent = self
+
+    def tree_height(self):
+        if not self.children:
+            return 1
+        else:
+            return 1 + max(child.tree_height() for child in self.children)
+
+
+
+first_board = TheBoard(0)
+# print(first_board.board_state)
+test1 = Node(1, first_board, 1, "X")
+print(test1.board_status.board_state)
+test1.append_child(Node(2, first_board, 2, "O"))
+test1.append_child(Node(3, first_board, 3, "X"))
+test1.children[1].append_child(Node(3, first_board, 2, "O"))
+print(test1.children[0].move)
+
+print(test1.tree_height())
+

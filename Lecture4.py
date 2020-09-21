@@ -36,14 +36,14 @@ class Node:
         child.parent = self
 
 
-x = Node(5)
+x = Node(5, "X")
 
 x.append_child(Node(2))
 x.append_child(Node(3))
 
 x.children[1].append_child(Node(82))
 
-print(x.value, [print(i.value) for i in x.children])
-
+for i in x.children:
+    print(i.parent.move)
 
 
