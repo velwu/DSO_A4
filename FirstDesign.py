@@ -2,16 +2,6 @@ from random import choices
 
 # board as 1D array
 
-class TheBoard:
-    def __init__(self, board_state_key):
-        self.state_id = board_state_key
-        self.board_state = ["-", "-", "-", "-",
-                            "-", "-", "-", "-",
-                            "-", "-", "-", "-",
-                            "-", "-", "-", "-"]
-
-    def set_player_move(self, player_symbol, position):
-        self.board_state[position] = player_symbol
 
 #TODO: Decide which data structure to use for board states.
 # Board state 2: A dictating dictionary~
@@ -25,32 +15,6 @@ board_new = {
     ]
 }
 
-
-# class GameState:
-#
-#     def __init__(self, board_status, turn_number, player):
-#         self.board_status = board_status
-#         self.turn_number = turn_number
-#         self.player = player
-#         self.legal_next_move = []
-#
-# class Node(GameState):
-#
-#     def __init__(self, move: int, game_state="GameState"):
-#         super().__init__(self)
-#         self.move = move
-#         self.game_state = game_state
-#         self.parent = None
-#         self.children = []
-#
-#     def append_child(self, child: "Node"):
-#         self.children.append(child)
-#         child.parent = self
-#
-# first_board = TheBoard(0)
-# # print(first_board.board_state)
-# test = Node(1)
-# print(test.player)
 
 def final_move():
     # conditions for a win, draw, and loss
@@ -83,30 +47,26 @@ def output():
     # number of games run and loss and wins?
     print("Finished Game")
 
-def random_player(board):
-    for x in range(1,17):
-        print(x)
-        choice = choices(['X', 'O'])
-        board.set_player_move(choice, x)
-        return board
-
-
 
 class Node():
 
-    def __init__(self, move: int, board_status, turn_number:int, player:str, game_state="game_state",):
+    def __init__(self, move: int, board_status, player:str, weight:float):
         self.move = move
-        self.game_state = game_state
         self.parent = None
         self.children = []
         self.board_status = board_status
-        self.turn_number = turn_number
         self.player = player
         self.legal_next_move = []
+        self.weight = weight
 
     def append_child(self, child: "Node"):
         self.children.append(child)
         child.parent = self
+
+    def adjust_weight(self):
+        if self.weight > 0:
+            self.weight -= 5.0
+            return self.weight
 
     def tree_height(self):
         if not self.children:
@@ -116,14 +76,14 @@ class Node():
 
 
 
-first_board = TheBoard(0)
+first_board = board_new
 # print(first_board.board_state)
-test1 = Node(1, first_board, 1, "X")
-print(test1.board_status.board_state)
-test1.append_child(Node(2, first_board, 2, "O"))
-test1.append_child(Node(3, first_board, 3, "X"))
-test1.children[1].append_child(Node(3, first_board, 2, "O"))
-print(test1.children[0].move)
+root = Node(1, first_board, "X", 50.0)
+root.append_child(Node(2, first_board, "O", 50.0))
 
-print(test1.tree_height())
-
+print(root.weight)
+print(root.board_status)
+print(root.adjust_weight())
+print(root.children[0].weight)
+print(root.children[0].adjust_weight())
+print(root.children[0].adjust_weight())
