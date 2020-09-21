@@ -5,6 +5,9 @@
 
 # Note to self: It's Sunday so I'm cooking spaghetti codes.
 
+import random
+import copy
+
 #TODO: Decide which data structure to use for board states.
 # Board state 1: A classy class~
 class TheBoard:
@@ -19,35 +22,144 @@ class TheBoard:
         self.board_state[position] = player_symbol
 
 #TODO: Decide which data structure to use for board states.
-# Board state 2: A dictating dictionary~
+# Board state 2: A dictating dictionary (currently in use)~
 board_new = {
-    "key": 0,
     "state": [
         "-", "-", "-", "-",
         "-", "-", "-", "-",
         "-", "-", "-", "-",
         "-", "-", "-", "-"
-    ]
+    ],
+    "possible_outcomes": [],
+    "outcome_weights": [],
+    "next": None
 }
 
-def check_victory(board, player_symbol):
-    if player_symbol == board["state"][0]:
-        if board["state"][0] ==  board["state"][3] == board["state"][12] == board["state"][15]:
-            print("Victory belongs to:", player_symbol)
-            show_me_the_board(board)
-            return True
-        elif board["state"][0] ==  board["state"][1] == board["state"][2] == board["state"][3]:
-            print("Victory belongs to:", player_symbol)
-            show_me_the_board(board)
-            return True
+# It is assumed herein that the computer which learns plays as 'O', whereas its opponent plays 'X'
+# The 'O' player is also referred to as 'learner' in some of the functions below.
+
+def play_all_game(board):
+    for each in range(0, len(board["state"])):
+        if board["state"].count("X") <= board["state"].count("O"):
+            print("Player X makes a move.")
+            moved_board, board_before = random_move(board, "X")
         else:
-            print("nothing is happening for", player_symbol)
-            show_me_the_board(board)
-            return False
-    else:
-        print("nothing is happening for", player_symbol)
+            print("Player O makes a move.")
+            moved_board, board_before = random_move(board, "O")
+        show_me_the_board(moved_board)
+        if check_victory(moved_board, "X"):
+            return board
+        elif check_victory(moved_board, "O"):
+            return board
+        board = moved_board
+
+    print("The game concludes in a draw.")
+    return board
+
+
+def random_move(board, player_symbol):
+
+    for each_index, each_value in enumerate(board["state"]):
+        if each_value == "-":
+            possible_outcome = copy.deepcopy(board["state"])
+            possible_outcome[each_index] = player_symbol
+            board["possible_outcomes"].append(possible_outcome)
+    next_board = {
+        "state": random.choices(
+            population=board["possible_outcomes"],
+            k=1
+        )[0],
+        "possible_outcomes": [],
+        "outcome_weights": [],
+        "next": None
+    }
+    board["next"] = next_board["state"]
+
+    return next_board, board
+
+def learner_move(board, player_symbol):
+    #TODO: complete this function
+    board["state"]
+    board["outcome_weights"]
+    board["next"]
+
+    return board
+
+def check_victory(board, player_symbol):
+    #TODO: This function is dreadfully long. Hopefully, a heroine or hero will come by to make it better.
+    # Wins by occupying 4 corners
+    if player_symbol == board["state"][0] ==  board["state"][3] == board["state"][12] == board["state"][15]:
+        print("Victory belongs to:", player_symbol)
         show_me_the_board(board)
-        return False
+        return True
+
+    # Wins by taking a full row
+    elif player_symbol == board["state"][0] ==  board["state"][1] == board["state"][2] == board["state"][3]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][4] ==  board["state"][5] == board["state"][6] == board["state"][7]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][8] ==  board["state"][9] == board["state"][10] == board["state"][11]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][12] ==  board["state"][13] == board["state"][14] == board["state"][15]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+
+    # Wins by taking a full column
+    elif player_symbol == board["state"][0] ==  board["state"][4] == board["state"][8] == board["state"][12]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][1] ==  board["state"][5] == board["state"][9] == board["state"][13]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][2] ==  board["state"][6] == board["state"][10] == board["state"][14]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][3] ==  board["state"][7] == board["state"][11] == board["state"][15]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+
+    # Wins by taking the diagonal lines
+    elif player_symbol == board["state"][0] ==  board["state"][5] == board["state"][10] == board["state"][15]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][3] ==  board["state"][6] == board["state"][9] == board["state"][12]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+
+    # Wins by taking a 2*2 square
+    elif player_symbol == board["state"][0] ==  board["state"][1] == board["state"][4] == board["state"][5]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][2] ==  board["state"][3] == board["state"][6] == board["state"][7]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][8] ==  board["state"][9] == board["state"][12] == board["state"][13]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+    elif player_symbol == board["state"][10] ==  board["state"][11] == board["state"][14] == board["state"][15]:
+        print("Victory belongs to:", player_symbol)
+        show_me_the_board(board)
+        return True
+
+    else:
+            #show_me_the_board(board)
+            return False
 
 def show_me_the_board(board):
     iterator = 0
