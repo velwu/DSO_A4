@@ -68,6 +68,16 @@ class Node():
             self.weight -= 5.0
             return self.weight
 
+    # working on the tree travesl using a queue
+    def search_tree(self, root):
+        visited_nodes = list()
+        node_queue = list()
+        while node_queue:
+            next_node = node_queue.pop()
+            visited_nodes.append(next_node)
+            for child in self.children:
+                node_queue.append(child)   
+
     def tree_height(self):
         if not self.children:
             return 1
