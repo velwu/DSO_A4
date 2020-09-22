@@ -8,33 +8,6 @@
 import random
 import copy
 
-#TODO: Decide which data structure to use for board states.
-# Board state 1: A classy class~
-class TheBoard:
-    def __init__(self, board_state_key):
-        self.state_id = board_state_key
-        self.board_state = ["-", "-", "-", "-",
-                            "-", "-", "-", "-",
-                            "-", "-", "-", "-",
-                            "-", "-", "-", "-"]
-
-    def set_player_move(self, player_symbol, position):
-        self.board_state[position] = player_symbol
-
-#TODO: Decide which data structure to use for board states.
-# Board state 2: A dictating dictionary (currently in use)~
-board_new = {
-    "state": [
-        "-", "-", "-", "-",
-        "-", "-", "-", "-",
-        "-", "-", "-", "-",
-        "-", "-", "-", "-"
-    ],
-    "possible_outcomes": [],
-    "outcome_weights": [],
-    "next": None
-}
-
 # It is assumed herein that the computer which learns plays as 'O', whereas its opponent plays 'X'
 # The 'O' player is also referred to as 'learner' in some of the functions below.
 
@@ -120,7 +93,7 @@ def check_victory(board, player_symbol):
 
     # Wins by taking a 2*2 square
     else:
-        for i in range(0, 11):
+        for i in [0, 1, 2, 4, 5, 6, 8, 9, 10]:
             if player_symbol == board["state"][i] ==  board["state"][i+1] == board["state"][i+4] == board["state"][i+5]:
                 print("Victory belongs to:", player_symbol, "who's occupied a 2-by-2 square.")
                 show_me_the_board(board)
@@ -136,7 +109,7 @@ def show_me_the_board(board):
     print()
 
 #The idea of recognizing rotations and optimizing them is based on this MENACE GitHub: https://github.com/mscroggs/MENACE/blob/master/menace.js
-#TODO: Apply this rotation to any function that deals with boards
+#TODO: (ignore for now)Apply this rotation to any function that deals with boards
 board_rotations =[
     [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
     [0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15],

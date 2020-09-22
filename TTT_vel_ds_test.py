@@ -1,5 +1,48 @@
 import TTT_vel_data_structure_draft as drafty
 
+#TODO: Remove the possible_outcomes attribute. They should be referenced in a global space.
+
+# Board state 2: A dictating dictionary (currently in use)~
+board_new = {
+    "state": [
+        "-", "-", "-", "-",
+        "-", "-", "-", "-",
+        "-", "-", "-", "-",
+        "-", "-", "-", "-"
+    ],
+    "possible_outcomes": [],
+    "outcome_weights": [],
+    "next": None
+}
+
+learned_boards = [
+    {"value": [
+        "-", "-", "-", "-",
+        "-", "-", "-", "-",
+        "-", "-", "-", "-",
+        "-", "-", "-", "-"
+    ],
+        "weight": 50},
+
+    {"value": [
+        "O", "-", "O", "O",
+        "-", "X", "-", "-",
+        "-", "X", "-", "-",
+        "-", "-", "-", "-"
+    ],
+        "weight": 100},
+
+    {"value": [
+        "X", "X", "X", "X",
+        "-", "O", "-", "O",
+        "-", "O", "-", "-",
+        "O", "-", "O", "-"
+    ],
+        "weight": 10}
+
+    # random.choices(weight=)
+]
+
 empty_board = {
     "state": [
         "-", "-", "-", "-",
