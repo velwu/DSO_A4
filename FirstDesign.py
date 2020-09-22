@@ -69,13 +69,16 @@ class Node():
             return self.weight
 
     # working on the tree travesl using a queue
-    def search_tree(self, root):
+    def search_tree(self):
         visited_nodes = list()
         node_queue = list()
+        node_queue.append(self)
+        print(node_queue[0].board_status)
         while node_queue:
             next_node = node_queue.pop()
+            print(next_node.weight)
             visited_nodes.append(next_node)
-            for child in self.children:
+            for child in next_node.children:
                 node_queue.append(child)   
 
     def tree_height(self):
@@ -91,9 +94,10 @@ first_board = board_new
 root = Node(1, first_board, "X", 50.0)
 root.append_child(Node(2, first_board, "O", 50.0))
 
-print(root.weight)
-print(root.board_status)
-print(root.adjust_weight())
-print(root.children[0].weight)
-print(root.children[0].adjust_weight())
-print(root.children[0].adjust_weight())
+# print(root.weight)
+# print(root.board_status)
+# print(root.adjust_weight())
+# print(root.children[0].weight)
+# print(root.children[0].adjust_weight())
+# print(root.children[0].adjust_weight())
+print(root.search_tree())
