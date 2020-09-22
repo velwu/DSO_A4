@@ -1,0 +1,37 @@
+
+# 4 x 4 Tic Tac Toe Due Friday
+
+## Rules:
+
+1. The game is won once on the of the players gets four spaces in a row, all four corners, or gets 2x2 arrangement.
+
+## Programming:
+
+1.
+
+2. Finding the mirror image to limit the amount of learning we have to do. If playing the middle piece creates mirror moves, do we only play for the edges?
+
+3. We start with a blank board, and no limit on moves or game pieces. Maybe we should give the random player the first move?
+
+4. Creating a tree structure that captures this complexity.
+
+## Questions:
+
+1. How to we best represent the board? A custom class? Do we represent the whole board, individual cells, or parts of the board?
+
+2. How do create the tree structure, and use it learn?
+
+3. How do we detect and store mirror moves?
+
+## Design:
+
+
+
+From the assignment page:
+
+You'll have to write a function that checks for the win/loss/draw conditions after each move, a function that validates all moves placed are legal, and another that can generate all next moves available for the current turn.  The latter is necessary since you will not be hand-coding all the different “matchbox diagrams”, but want it to automatically generate those as the games play out.
+
+You want your learning machine to start out utterly stupid, where it is purely random at each move, based on the "beads in the matchbox". But as it learns from losing games played poorly, it needs to record what it has learned.  For example, if it crashed or something, you don't want it to have to start over and replay hundreds or thousands of games to re-learn!  So have it save it's "matchboxes" and "beads" in a file so it can re-load those to resume with whatever it has already learned.
+
+
+
