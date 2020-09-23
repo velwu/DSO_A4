@@ -54,25 +54,26 @@ ADraw = 0
 def output(wins, loses, adraw):
     # number of games run and loss and wins?
     # if a win:
-    Player_O_wins += 1
+    wins += 1
     # if a loss
-    Player_O_loses += 1
+    loses += 1
     # if a draw
-    ADraw += 1
+    adraw += 1
     print("Finished Game")
 
 
 
 class Node():
 
-    def __init__(self, move: int, turn_number: int, board_status, player:str, weight:float):
+    def __init__(self, move: int, turn_number: int, board_status, player:str, weight:float, legal_next_move: list):
         self.move = move
         self.turn_number = turn_number
         self.parent = None
         self.children = []
         self.board_status = board_status
         self.player = player
-        self.legal_next_move = []
+        # add to aooend+child method
+        self.legal_next_move = legal_next_move
         self.weight = weight
         self.board_key = str(turn_number) + "-" + str(move)
 
@@ -83,6 +84,12 @@ class Node():
     def unique_key(self):
         self.board_status['key'] += str(self.turn_number) + "-" + str(self.move)
         #return self.board_status
+
+    def legal_moves(self, move):
+        self.legal_next_move = list(range(0, 17))
+        self.legal_next_move.remove(move)
+        #print(node.legal_next_move.remove(move) for node in self.search_tree())
+        return self.legal_next_move
 
 
     def adjust_weight(self):
@@ -105,11 +112,18 @@ class Node():
             next_node = node_queue.pop()
             visited_nodes.append(next_node)
             if  next_node.parent != None:
+                print()
                 print("Parent Key: ", next_node.parent.board_key)
                 print("Parent Weight: ", next_node.parent.weight)
+                print("Parent Move: ", next_node.parent.move)
+                print("Parent Legal Moves: ", next_node.parent.legal_next_move)
+                print()
                 for child in next_node.children:
                     print("Child Key: ", child.board_key)
                     print("Child Weight: ", child.weight)
+                    print("Child Move: ", child.move)
+                    print("Child Legal Moves: ", child.legal_next_move)
+                    print()
                     node_queue.append(child)
         return [i.board_status for i in visited_nodes]
 
@@ -122,15 +136,14 @@ class Node():
 
 
 
-root = Node(0, 0, board_new, "None", 0)
-root.append_child(Node(16, 1, board_new, "X", 50.0))
-root.append_child(Node(4, 1, board_new, "X", 50.0))
-root.append_child(Node(3, 1, board_new, "X", 50.0))
-root.children[1].append_child(Node(8, 2, board_new, "O", 50.0))
-root.children[1].append_child(Node(7, 2, board_new, "O", 50.0))
-root.children[2].append_child(Node(9, 2, board_new, "O", 50.0))
-root.children[2].append_child(Node(3, 2, board_new, "O", 50.0))
-root.children[1].children[0].append_child(Node(10, 3, board_new, "X", 50.0))
+root = Node(0, 0, board_new, "None", 0, list(range(0,17)))
+root.append_child(Node(16, 1, board_new, "X", 50.0, list(range(0,17)).remove(16)))
+root.append_child(Node(4, 1, board_new, "X", 50.0, list(range(0,17)).remove(4)))
+root.append_child(Node(3, 1, board_new, "X", 50.0, list(range(0,17)).remove(3)))
+root.children[1].append_child(Node(7, 2, board_new, "O", 50.0, list(range(0,17)).remove(7)))
+root.children[2].append_child(Node(9, 2, board_new, "O", 50.0, list(range(0,17)).remove(9)))
+root.children[2].append_child(Node(3, 2, board_new, "O", 50.0, list(range(0,17)).remove(3)))
+root.children[1].children[0].append_child(Node(10, 3, board_new, "X", 50.0, list(range(0,17)).remove(10)))
 
 # print(root.weight)
 # print(root.board_status)
@@ -138,7 +151,9 @@ root.children[1].children[0].append_child(Node(10, 3, board_new, "X", 50.0))
 # print(root.children[0].weight)
 # print(root.children[0].adjust_weight())
 # print(root.children[0].adjust_weight())
-print(root.children[1].children[0].search_tree())
+#print(root.children[1].children[0].search_tree())
 # print(root.children[1].children[0].search_tree())
 # print(root.unique_key(4,1))
 # print(root.children[0].unique_key(16,2))
+print("Legal Moves: ", root.children[1].legal_moves(4))
+#print("Legal Moves: ", root.children[1].children[0].legal_moves(8))
