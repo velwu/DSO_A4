@@ -2,32 +2,114 @@
 ## 4-in-a-row
 ## holding all 4 corners
 ## filling any adjacent 2x2 square with your markers
-
-# Note to self: It's Sunday so I'm cooking spaghetti codes.
-
 import random
 import copy
+#import FirstDesign as FD
 
-# It is assumed herein that the computer which learns plays as 'O', whereas its opponent plays 'X'
+# It is assumed herein that the machine which learns always plays as 'O', whereas its opponent plays 'X'
 # The 'O' player is also referred to as 'learner' in some of the functions below.
 
-def play_all_game(board):
+
+"""
+This is what it should look like optimally:
+
+learned_board_repository = [
+Node("XX--OO--XO-X----", 70.0), 
+
+Node("XX--OO--XO-X---O", 50.0), 
+
+Node("XX--OO--XO-XX--O", 20.0)
+
+]
+
+"""
+# Tree 1: learned_board_repository - gets kept til the end of time
+learned_board_repository = {}
+
+"""
+{"XX--OO--XO-X----" : 70.0, 
+"XX--OO--XO-X---O": 50.0, 
+"XX--OO--XO-XX--O": 20.0}
+"""
+
+# Tree 2: current_game_moves - gets wiped/reset every time a new game starts
+# board states get appended for every move that is made
+
+"""
+if board["state"].str() is in ["XX--OO--XO-X----", "XX--OO--XO-XX--O", ....]
+    O(1)
+
+if O(len([]))
+
+"""
+
+def play_games_record_them(board, learning, how_many_rounds):
+    score_board_for_Player_O = {"Win" : 0, "Loss" : 0, "Draw" : 0}
+    for each in range(0, how_many_rounds):
+         game_result = play_a_game(board, learning, False)
+         score_board_for_Player_O[game_result] += 1
+         print(score_board_for_Player_O)
+
+    print(score_board_for_Player_O)
+
+
+def play_a_game(board, learning, show_each_move):
+    current_game_moves = []
     for each in range(0, len(board["state"])):
         if board["state"].count("X") <= board["state"].count("O"):
             print("Player X makes a move.")
             moved_board, board_before = random_move(board, "X")
-        else:
+        elif learning == True:
+            print("Player O makes a move.")
+            moved_board, board_before, chosen_move = learner_move(board, "O")
+            current_game_moves.append(chosen_move)
+        elif learning == False:
             print("Player O makes a move.")
             moved_board, board_before = random_move(board, "O")
-        show_me_the_board(moved_board)
+        if show_each_move:
+            show_me_the_board(moved_board)
+
+
         if check_victory(moved_board, "X"):
-            return board
+        # if "X" wins (means this is a loss for "O")
+            # loop through all games moves taken
+            for each in current_game_moves:
+                # punish a move if it is already known/learned and not zero
+                if each in learned_board_repository:
+                    if learned_board_repository[each] > 0:
+                        learned_board_repository[each] -= 5
+                else:
+                    learned_board_repository[each] = 45
+            print(len(learned_board_repository), "learned moves:", learned_board_repository)
+            #return board, "Loss"
+            return "Loss"
         elif check_victory(moved_board, "O"):
-            return board
+        #if "O" wins, all moves made in this game might deserve rewards
+            # loop through all games moves taken
+            
+            for each in current_game_moves:
+                # reward  a move if it is already known/learned
+                if each in learned_board_repository:
+                    learned_board_repository[each] += 5
+                else:
+                    learned_board_repository[each] = 55
+            print(len(learned_board_repository), "learned moves:", learned_board_repository)
+            #return board, "Win"
+            return "Win"
         board = moved_board
 
+    # if this following section is reached at all, it means that all cells have been filled without any checks above passing
+    # that is, the game is a draw.
+    # loop through all games moves taken
+    for each in current_game_moves:
+        # only record previously unknown moves
+        if each not in learned_board_repository:
+            learned_board_repository[each] = 50
     print("The game concludes in a draw.")
-    return board
+    print(len(learned_board_repository), "learned moves:", learned_board_repository)
+    #return board, "Draw"
+    show_me_the_board(board)
+    return "Draw"
 
 
 def random_move(board, player_symbol):
@@ -36,12 +118,12 @@ def random_move(board, player_symbol):
         if each_value == "-":
             possible_outcome = copy.deepcopy(board["state"])
             possible_outcome[each_index] = player_symbol
-            board["possible_outcomes"].append(possible_outcome)
+            board["possible_outcomes"].append("".join(possible_outcome))
     next_board = {
-        "state": random.choices(
+        "state": list(random.choices(
             population=board["possible_outcomes"],
             k=1
-        )[0],
+        )[0]),
         "possible_outcomes": [],
         "outcome_weights": [],
         "next": None
@@ -50,13 +132,53 @@ def random_move(board, player_symbol):
 
     return next_board, board
 
+
 def learner_move(board, player_symbol):
     #TODO: complete this function
-    board["state"]
-    board["outcome_weights"]
-    board["next"]
+    for each_index, each_value in enumerate(board["state"]):
+        if each_value == "-":
+            possible_outcome = copy.deepcopy(board["state"])
+            possible_outcome[each_index] = player_symbol
+            board["possible_outcomes"].append("".join(possible_outcome))
+            board["outcome_weights"].append(50)
 
-    return board
+    for each_idx, each_val in enumerate(board["possible_outcomes"]):
+        #TODO: Fix this line so it uses the hashmap "learned_board_repository"
+        if each_val in learned_board_repository:
+            #if one of the possible legal outcomes from the current board is already learned with weights in the repo
+            #board["possible_outcomes"].append(each) #add the previously learned board state to currently possible moves (key in hashmap)
+            board["outcome_weights"][each_idx] = learned_board_repository[each_val] #add the weight (value in hashmap)
+
+            #since randomly generated moves only have weights of 1.0, any learned moves should be heavily preferred unless punished into oblivion (weight = 0)
+    """
+    if a_node in learned_board_repository:
+        next_board = a_node["state"]
+        random.choices()
+    if a_node not in learned_board_repository:
+        a_node = Node("".join(next_board["state"]), player_symbol, 50.0)
+        learned_board_repository.append(a_node)     
+    """
+    chosen_move = random.choices(population=board["possible_outcomes"],weights=board["outcome_weights"],k=1)[0]
+
+    next_board = {
+        "state": list(chosen_move),
+        "possible_outcomes": [],
+        "outcome_weights": [],
+        "next": None
+    }
+    board["next"] = next_board["state"]
+
+    return next_board, board, chosen_move
+
+def contains(list, filter):
+    # https://stackoverflow.com/questions/598398/searching-a-list-of-objects-in-python
+    # This reference was necessary for finding a class instance in the global space where the learned board states with their weights are stored.
+    for x in list:
+        if filter(x):
+            return True
+    return False
+
+
 
 def check_victory(board, player_symbol):
 

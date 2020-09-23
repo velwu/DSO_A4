@@ -109,4 +109,16 @@ board_in_progress_3 = {
 #drafty.show_me_the_board(board_before_3)
 #print("POSSIBLE OUTCOMES", *board_before_3["possible_outcomes"])
 
-drafty.play_all_game(empty_board)
+# "O" is not learning but tracks each move in game
+#drafty.play_a_game(empty_board, False, True)
+
+# "O" is learning but not tracking each move in game
+#drafty.play_a_game(empty_board, True, False)
+
+# "O" is learning and also tracking each move
+#drafty.play_a_game(empty_board, True, True)
+
+drafty.play_games_record_them(empty_board, True, 500)
+
+#for i in range(0, 100):
+#    drafty.play_all_game(empty_board, True)
