@@ -1,9 +1,22 @@
-# Reference: "4x4 Tic-Tac-Toe" (which has all these win conditions:
+"""
+# Team members: (Name / GitHub ID / NetID)
+
+Samantha Walkow / samwalkow / ??
+
+Rajath John / jrajath94 / ??
+
+Vel (Tien-Yun) Wu / velwu / tienyun2
+
+"""
+
+
+# Choice of topic: "4x4 Tic-Tac-Toe" (which has all these win conditions:
 ## 4-in-a-row
 ## holding all 4 corners
 ## filling any adjacent 2x2 square with your markers
 import random
 import copy
+from datetime import datetime
 #import FirstDesign as FD
 
 # It is assumed herein that the machine which learns always plays as 'O', whereas its opponent plays 'X'
@@ -17,16 +30,7 @@ learned_board_repository = {}
 "XX--OO--XO-X---O": 50.0, 
 "XX--OO--XO-XX--O": 20.0}
 """
-
-# Tree 2: current_game_moves - gets wiped/reset every time a new game starts
-# board states get appended for every move that is made
-
-"""
-The idea's like this:
-if board["state"].str() is in ["XX--OO--XO-X----", "XX--OO--XO-XX--O", ....]
-    O(1)
-
-"""
+# Tree 2?: current_game_moves - gets wiped/reset every time a new game starts. It's there for branching decision nodes
 
 #TODO: 1. Make both players learn (currently only "O" is learning)
 #TODO: 2. Export the learned data to an external file that can be imported
@@ -46,7 +50,7 @@ def play_games_record_them(board, learning, how_many_rounds, resetting_scores, r
             if scored_games_count == reset_interval:
                 #print(score_board_for_Player_O)
                 with open("records.txt", "a") as file_object:
-                    file_object.write(str(score_board_for_Player_O) + "\n")
+                    file_object.write(str(score_board_for_Player_O) + " " + datetime.now().strftime("%H:%M:%S") + "\n")
                 scored_games_count = 0
                 score_board_for_Player_O = {"Win": 0, "Loss": 0, "Draw": 0}
 

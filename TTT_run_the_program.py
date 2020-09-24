@@ -1,4 +1,5 @@
 import TTT_vel_data_structure_draft as drafty
+import TTT_vel_rajath_samantha as TTT_solution
 
 #TODO: Remove the possible_outcomes attribute. They should be referenced in a global space.
 
@@ -120,9 +121,10 @@ board_in_progress_3 = {
 
 #drafty.play_games_record_them(empty_board, True, 10000, False, 0)
 
-#drafty.play_games_record_them(empty_board, True, 1000000, True, 100000)
 
-drafty.play_games_record_them(empty_board, True, 1000, True, 100)
+#TTT_solution.play_games_record_them(empty_board, True, 1000, True, 100)
+
+TTT_solution.play_games_record_them(empty_board, True, 1000000, True, 10000)
 
 #for i in range(0, 100):
 #    drafty.play_all_game(empty_board, True)
