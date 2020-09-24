@@ -1,4 +1,5 @@
 from random import choices
+import copy
 
 # board as 1D array
 
@@ -61,11 +62,13 @@ def output(wins, loses, adraw):
     adraw += 1
     print("Finished Game")
 
-
+def unique_key(board, move, turn_number):
+        board['key'] = str(turn_number) + "-" + str(move)
+        return board
 
 class Node():
 
-    def __init__(self, move: int, turn_number: int, board_status, player:str, weight:float, legal_next_move: list):
+    def __init__(self, move: int, turn_number: int, board_status, player:str, weight:float):
         self.move = move
         self.turn_number = turn_number
         self.parent = None
@@ -73,17 +76,13 @@ class Node():
         self.board_status = board_status
         self.player = player
         # add to aooend+child method
-        self.legal_next_move = legal_next_move
+        self.legal_next_move = []
         self.weight = weight
         self.board_key = str(turn_number) + "-" + str(move)
 
     def append_child(self, child: "Node"):
         self.children.append(child)
         child.parent = self
-
-    def unique_key(self):
-        self.board_status['key'] += str(self.turn_number) + "-" + str(self.move)
-        #return self.board_status
 
     def legal_moves(self, move):
         self.legal_next_move = list(range(0, 17))
@@ -116,12 +115,16 @@ class Node():
                 print("Parent Key: ", next_node.parent.board_key)
                 print("Parent Weight: ", next_node.parent.weight)
                 print("Parent Move: ", next_node.parent.move)
+                # move_arg_p = next_node.parent.move
+                # next_node.parent.legal_moves(move_arg_p)
                 print("Parent Legal Moves: ", next_node.parent.legal_next_move)
                 print()
                 for child in next_node.children:
                     print("Child Key: ", child.board_key)
                     print("Child Weight: ", child.weight)
                     print("Child Move: ", child.move)
+                    # move_arg = child.move
+                    # child.legal_moves(move_arg)
                     print("Child Legal Moves: ", child.legal_next_move)
                     print()
                     node_queue.append(child)
@@ -136,24 +139,46 @@ class Node():
 
 
 
-root = Node(0, 0, board_new, "None", 0, list(range(0,17)))
-root.append_child(Node(16, 1, board_new, "X", 50.0, list(range(0,17)).remove(16)))
-root.append_child(Node(4, 1, board_new, "X", 50.0, list(range(0,17)).remove(4)))
-root.append_child(Node(3, 1, board_new, "X", 50.0, list(range(0,17)).remove(3)))
-root.children[1].append_child(Node(7, 2, board_new, "O", 50.0, list(range(0,17)).remove(7)))
-root.children[2].append_child(Node(9, 2, board_new, "O", 50.0, list(range(0,17)).remove(9)))
-root.children[2].append_child(Node(3, 2, board_new, "O", 50.0, list(range(0,17)).remove(3)))
-root.children[1].children[0].append_child(Node(10, 3, board_new, "X", 50.0, list(range(0,17)).remove(10)))
+root = Node(0, 0, board_new, "None", 0)
+# root.append_child(Node(16, 1, board_new, "X", 50.0)
+# root.append_child(Node(4, 1, board_new, "X", 50.0)
+# root.append_child(Node(3, 1, board_new, "X", 50.0)
+# root.children[1].append_child(Node(7, 2, board_new, "O", 50.0)
+# root.children[2].append_child(Node(9, 2, board_new, "O", 50.0)
+# root.children[2].append_child(Node(3, 2, board_new, "O", 50.0)
+# root.children[1].children[0].append_child(Node(10, 3, board_new, "X", 50.0, list(range(0,17)).remove(10)))
 
-# print(root.weight)
-# print(root.board_status)
-# print(root.adjust_weight())
-# print(root.children[0].weight)
-# print(root.children[0].adjust_weight())
-# print(root.children[0].adjust_weight())
-#print(root.children[1].children[0].search_tree())
-# print(root.children[1].children[0].search_tree())
-# print(root.unique_key(4,1))
-# print(root.children[0].unique_key(16,2))
-print("Legal Moves: ", root.children[1].legal_moves(4))
-#print("Legal Moves: ", root.children[1].children[0].legal_moves(8))
+
+def tic_tac_toe(root, board):
+    for index, board_space in enumerate(board_new["state"]):
+       # print(index+1, board_space)
+        if (index % 2) != 0 and index != 0:
+            print("player X plays")
+            x_move = choices(range(len(board_new["state"])), weights=[50] * len(board_new["state"]))
+            x_move_int = x_move.pop()
+            print(x_move_int)
+            if board["state"][x_move_int] == "-":
+                next_board = copy.deepcopy(board)
+                unique_key(next_board, x_move_int, index)
+                print(next_board["state"][x_move_int])
+                next_board["state"][x_move_int] == "X"
+                root.append_child(Node(x_move_int, index, next_board, "X", 50.0))
+                print(next_board)
+                print(root.children[0].board_status)
+        elif (index % 2) == 0 and index !=0:
+            print("player O plays")
+            # o_move = choices(range(1, len(board_new["state"])+1), weights=[50] * len(board_new["state"]))
+            # o_move_int = o_move.pop()
+            # if board["state"][o_move_int] == "-":
+            #     print(board["state"])
+            #     next_board = copy.deepcopy(board)
+            #     print(o_move_int)
+            #     unique_key(next_board, o_move_int, index)
+            #     next_board["state"][o_move_int] == "X"
+            #     root.append_child(Node(o_move_int, index, next_board, "O", 50.0))
+            #     print(next_board)
+
+
+
+print(tic_tac_toe(root, board_new))
+#print(board_new["state"].index("-"))
