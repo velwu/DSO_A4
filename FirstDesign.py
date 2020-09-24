@@ -39,12 +39,26 @@ def generate_next_move():
 
 # we also need  a way to track duplicate situations
 
-def matchboxes():
-    matchbox = list()
-    bead = str
+def matchboxes(possible_moves, root):
+    matchboxes = list([possible_moves])
+    matchbox = []
+    for index, space in enumerate(possible_moves):
+        print(range(len(possible_moves))[index])
+        # as I remove indexes they disappear
+        # next_move = range(len(possible_moves))[index] - index
+        # print(next_move)
+        legal_move = possible_moves[index] = "x"
+        next_legal_move = possible_moves != "x"
+        matchbox.append(legal_move)
+        matchboxes.append(matchbox)
+        root.append_child(Node(space, space, possible_moves, "X", 50.0))
     # keep track of failures and success
     # get rid of the failures and keep success
-    print("learning with matchboxes")
+        print(root)
+        print(matchbox)
+        print(matchboxes)
+        print(next_legal_move)
+
 
 
 Player_O_wins = 0
@@ -63,7 +77,10 @@ def output(wins, loses, adraw):
     print("Finished Game")
 
 def unique_key(board, move, turn_number):
-        board['key'] = str(turn_number) + "-" + str(move)
+        if move == None:
+            board['key'] = "Root Board"
+        else:
+            board['key'] = str(turn_number) + "-" + str(move)
         return board
 
 class Node():
@@ -139,7 +156,7 @@ class Node():
 
 
 
-root = Node(0, 0, board_new, "None", 0)
+root = Node(None, None, board_new, "None", None)
 # root.append_child(Node(16, 1, board_new, "X", 50.0)
 # root.append_child(Node(4, 1, board_new, "X", 50.0)
 # root.append_child(Node(3, 1, board_new, "X", 50.0)
@@ -150,35 +167,73 @@ root = Node(0, 0, board_new, "None", 0)
 
 
 def tic_tac_toe(root, board):
+    next_board = copy.deepcopy(board)
+    moves_made = []
+
     for index, board_space in enumerate(board_new["state"]):
-       # print(index+1, board_space)
-        if (index % 2) != 0 and index != 0:
-            print("player X plays")
-            x_move = choices(range(len(board_new["state"])), weights=[50] * len(board_new["state"]))
-            x_move_int = x_move.pop()
-            print(x_move_int)
-            if board["state"][x_move_int] == "-":
-                next_board = copy.deepcopy(board)
+        print(index, board_space)
+
+        if next_board['state'][index] == "-":
+            if (index % 2) == 0:
+                print("player X plays")
+                # if next_board['state'][index] == "-":
+                # maybe too few moves
+                x_move = choices(range(len(board_new["state"])-1))
+                x_move_int = x_move.pop()
+                moves_made.append(x_move_int)
+            #if next_board["state"][x_move_int] == "-":
                 unique_key(next_board, x_move_int, index)
-                print(next_board["state"][x_move_int])
-                next_board["state"][x_move_int] == "X"
-                root.append_child(Node(x_move_int, index, next_board, "X", 50.0))
+                next_board["state"][x_move_int] = 'X'
+                if len(root.children) < 16:
+                    root.append_child(Node(x_move_int, index, next_board, "X", 50.0))
+                # else:
+                #     root.children
                 print(next_board)
-                print(root.children[0].board_status)
-        elif (index % 2) == 0 and index !=0:
-            print("player O plays")
-            # o_move = choices(range(1, len(board_new["state"])+1), weights=[50] * len(board_new["state"]))
-            # o_move_int = o_move.pop()
-            # if board["state"][o_move_int] == "-":
-            #     print(board["state"])
-            #     next_board = copy.deepcopy(board)
-            #     print(o_move_int)
-            #     unique_key(next_board, o_move_int, index)
-            #     next_board["state"][o_move_int] == "X"
-            #     root.append_child(Node(o_move_int, index, next_board, "O", 50.0))
-            #     print(next_board)
+                print(moves_made)
+                print()
+                #print("Root: ", root.board_status)
+            # else:
+            #     print("spot full")
+            #     continue
 
+            elif (index % 2) != 0:
+                print("player O plays")
+            # if next_board['state'][index] == "-":
+                moves_made.append(index)
+                o_move = choices(range(1, len(board_new["state"])+1), weights=[50] * len(board_new["state"]))
+                o_move_int = o_move.pop()
+            # if next_board["state"][o_move_int] == "-":
+                unique_key(next_board, o_move_int, index)
+                print("Board len: ", len(next_board["state"]), "move num: ", o_move_int)
+                next_board["state"][o_move_int] = 'O'
+                root.append_child(Node(o_move_int, index, next_board, "O", 50.0))
+                print(next_board)
 
-
-print(tic_tac_toe(root, board_new))
+        else:
+            continue
+            
+            
+#print(tic_tac_toe(root, board_new))
 #print(board_new["state"].index("-"))
+#print(matchboxes(list('-')*16, root))
+
+l = list(range(16))
+nl = []
+n = copy.deepcopy(l)
+
+for i in l:
+    #n = copy.deepcopy(l)
+    c = choices(l, weights=[50] * len(n), k=16)
+    print(c)
+    c_pop = c.pop()
+    if n[c_pop] != 'X': 
+        n[c_pop] = 'X'
+        print(n)
+        not_x = []
+        for y in n:
+            if y != 'X':
+                not_x.append(y)
+                nl.append(not_x)
+        print(not_x)
+print(nl)
+
