@@ -3,9 +3,8 @@ import copy
 
 # board as 1D array
 
-
-#TODO: Decide which data structure to use for board states.
-# Board state 2: A dictating dictionary~
+# This was a class design we considered for the storage space of the program's learning outcomes, but ultimately archived.
+# Nonetheless, we considered it important enough to include as a reference point.
 
 # this is the root
 board_new = {

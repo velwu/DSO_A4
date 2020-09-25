@@ -16,6 +16,7 @@ Vel (Tien-Yun) Wu / velwu / tienyun2
 ## filling any adjacent 2x2 square with your markers
 import random
 import copy
+import pickle
 from datetime import datetime
 #import FirstDesign as FD
 

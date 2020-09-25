@@ -1,9 +1,6 @@
-import TTT_vel_data_structure_draft as drafty
 import TTT_vel_rajath_samantha as TTT_solution
+import pickle
 
-#TODO: Remove the possible_outcomes attribute. They should be referenced in a global space.
-
-# Board state 2: A dictating dictionary (currently in use)~
 board_new = {
     "state": [
         "-", "-", "-", "-",
@@ -92,39 +89,17 @@ board_in_progress_3 = {
     "next": None
 }
 
-#drafty.check_victory(board_in_progress_1, "O")
-#drafty.check_victory(board_in_progress_1, "X")
-#drafty.check_victory(board_in_progress_2, "O")
-#drafty.check_victory(board_in_progress_3, "X")
-
-
-#board_after_1, board_before_1 = drafty.random_move(board_in_progress_1, "X")
-#print(board_before_the_move)
-#drafty.show_me_the_board(board_before_1)
-#drafty.show_me_the_board(board_after_1)
-#board_after_2, board_before_2 = drafty.random_move(board_after_1, "O")
-#drafty.show_me_the_board(board_before_2)
-#drafty.show_me_the_board(board_after_2)
-
-#board_after_3, board_before_3 = drafty.random_move(board_after_2, "X")
-#drafty.show_me_the_board(board_before_3)
-#print("POSSIBLE OUTCOMES", *board_before_3["possible_outcomes"])
-
-# "O" is not learning but tracks each move in game
-#drafty.play_a_game(empty_board, False, True)
-
-# "O" is learning but not tracking each move in game
-#drafty.play_a_game(empty_board, True, False)
-
-# "O" is learning and also tracking each move
-#drafty.play_a_game(empty_board, True, True)
-
-#drafty.play_games_record_them(empty_board, True, 10000, False, 0)
-
-
 #TTT_solution.play_games_record_them(empty_board, True, 1000, True, 100)
 
+try:
+    game_memory = pickle.load(open("Game_Memory.pickle", "rb"))
+except (OSError, IOError) as e:
+    pickle.dump(game_memory, open("Game_Memory.pickle", "wb"))
+
 TTT_solution.play_games_record_them(empty_board, True, 1000000, True, 10000)
+
+with open('Game_Memory.pickle', 'wb') as fp:
+    pickle.dump(game_memory, fp, protocol=pickle.HIGHEST_PROTOCOL)
 
 #for i in range(0, 100):
 #    drafty.play_all_game(empty_board, True)

@@ -3,23 +3,16 @@
 ## holding all 4 corners
 ## filling any adjacent 2x2 square with your markers
 
-# Note to self: It's Sunday so I'm cooking spaghetti codes.
-
 import pickle
 import random
 
-# TODO: Decide which data structure to use for board states.
-# Board state 1: A classy class~
 
-# TODO: Decide which data structure to use for board states.
-# Board state 2: A dictating dictionary (currently in use)~
 board_new = [
     "-", "-", "-", "-",
     "-", "-", "-", "-",
     "-", "-", "-", "-",
     "-", "-", "-", "-"
 ]
-
 
 # It is assumed herein that the computer which learns plays as 'O', whereas its opponent plays 'X'
 # The 'O' player is also referred to as 'learner' in some of the functions below.
