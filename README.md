@@ -1,7 +1,7 @@
 # DSO_A4
 This is a group assignment repo for IS 597 DSO FA20 A4 - Virtual Matchbox Engine
 
-GitHub link: https://github.com/velwu/DSO_A4/edit/A4_final/
+GitHub link: https://github.com/velwu/DSO_A4/tree/A4_final
 
 ### Team members: (Name / GitHub ID / NetID)
 Samantha Walkow / samwalkow / swalkow2
