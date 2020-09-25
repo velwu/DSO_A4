@@ -6,7 +6,7 @@ GitHub link: https://github.com/velwu/DSO_A4/tree/A4_final
 ### Team members: (Name / GitHub ID / NetID)
 Samantha Walkow / samwalkow / swalkow2
 
-Rajath John / jrajath94 / ??
+Rajath John / jrajath94 / rajathj2
 
 Vel (Tien-Yun) Wu / velwu / tienyun2
 
