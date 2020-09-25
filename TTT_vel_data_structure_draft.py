@@ -4,6 +4,7 @@
 ## filling any adjacent 2x2 square with your markers
 import random
 import copy
+import pickle
 #import FirstDesign as FD
 
 # It is assumed herein that the machine which learns always plays as 'O', whereas its opponent plays 'X'

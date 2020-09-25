@@ -1,7 +1,7 @@
 """
 # Team members: (Name / GitHub ID / NetID)
 
-Samantha Walkow / samwalkow / ??
+Samantha Walkow / samwalkow / swalkow2
 
 Rajath John / jrajath94 / ??
 
@@ -32,7 +32,6 @@ learned_board_repository = {}
 """
 # Tree 2?: current_game_moves - gets wiped/reset every time a new game starts. It's there for branching decision nodes
 
-#TODO: 1. Make both players learn (currently only "O" is learning)
 #TODO: 2. Export the learned data to an external file that can be imported
 
 def play_games_record_them(board, learning, how_many_rounds, resetting_scores, reset_interval):
