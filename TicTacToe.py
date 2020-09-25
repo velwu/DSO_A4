@@ -1,7 +1,8 @@
-# Reference: "4x4 Tic-Tac-Toe" (which has all these win conditions:
-## 4-in-a-row
-## holding all 4 corners
-## filling any adjacent 2x2 square with your markers
+
+
+# Note: This is the place where the main codes are replicated such that methods which export learning outcomes to a pickle file could be experimented with.
+
+# The outcome of this experiment is included in the main file.
 
 import pickle
 import random
