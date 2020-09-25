@@ -2,7 +2,7 @@
 This is a group assignment repo for IS 597 DSO FA20 A4 - Virtual Matchbox Engine
 
 ### Team members: (Name / GitHub ID / NetID)
-Samantha Walkow / samwalkow / ??
+Samantha Walkow / samwalkow / swalkow2
 
 Rajath John / jrajath94 / ??
 
