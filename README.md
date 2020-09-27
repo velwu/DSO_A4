@@ -10,9 +10,9 @@ Vel (Tien-Yun) Wu / velwu / tienyun2
 
 
 ### Work distribution (09/2/2020)
-Samantha: Server protocols
-Rajath: AI Learning behaviors
-Vel: Game rules + victory conditions
+- Samantha: Server protocols
+- Rajath: AI Learning behaviors
+- Vel: Game rules + victory conditions
 
 ### link to assignment instructions:
 https://learn.illinois.edu/mod/assign/view.php?id=4826928
