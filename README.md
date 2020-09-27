@@ -9,7 +9,7 @@ Rajath John / jrajath94 / rajathj2
 Vel (Tien-Yun) Wu / velwu / tienyun2
 
 
-### Work distribution (09/2/2020)
+### Work distribution (Sep 27th /2020)
 - Samantha: Server protocols
 - Rajath: AI Learning behaviors
 - Vel: Game rules + victory conditions
