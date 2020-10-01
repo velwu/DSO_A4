@@ -75,7 +75,7 @@ def intersect(A,B,C,D):
         return True
     elif IsOnLeft(A,B,D) and IsOnRight(A,B,C):
         return True
-    elif A == C and (IsOverlapping(A,B,D) or IsOverlapping(B, D, A)):
+    elif (A == C or B == C) and (IsOverlapping(A,B,D) or IsOverlapping(B, D, A)):
         return True
     elif A == C and IsOverlapping(A, D, B):
         return True
