@@ -19,7 +19,7 @@ Options:
 
 """
 
-from A5_prototype.HTL_vel_game_rules_n_misc_draft import create_board, human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
+# from A5_prototype.HTL_vel_game_rules_n_misc_draft import create_board, human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
 import requests
 import docopt
 from random import choice, choices, randint
@@ -84,7 +84,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # sequence of alternating between requests "await-turn" and "move":
 
     # generate the board dynamically
-    game_board = create_board(input("Enter the height of the board: ", input("Endter the width of the board: ")))
+    game_board = create_board(int(input("Enter the height of the board: ")), int(input("Endter the width of the board: ")))
     print(game_board)
 
     # create the game state
