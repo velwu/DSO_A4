@@ -108,9 +108,12 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
                 print(result)
                 # here is where we get the enemy move, which we can take as input
                 try:
-                    previous_move = result["history"][0]["move"]
-                    print("Results for last move: ", previous_move, type(previous_move))
-                    print()
+                    if result[0]['turn_number'] != 1:
+                        previous_move = result["history"][0]["move"]
+                        print("Results for last move: ", previous_move, type(previous_move))
+                        print()
+                    else:
+                        continue
                 except KeyError:
                     print("Other Player not connected yet")
             except json.decoder.JSONDecodeError:
