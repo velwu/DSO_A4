@@ -19,14 +19,24 @@ Options:
 
 """
 
+from A5_prototype.HTL_vel_game_rules_n_misc_draft import create_board, human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
 import requests
 import docopt
 from random import choice, choices, randint
 import json
 from time import sleep
 import logging
+import os
+os.system("python HTL_vel_game_rules_n_misc_draft.py")
 # logging.basicConfig(level=logging.DEBUG)
 
+
+def create_board(height, width):
+    board_as_list = []
+    for h in range(height):
+        for w in range(width):
+            board_as_list.append((h, w))
+    return board_as_list
 
 def play_rps(game_server_url: str, netid: str, player_key: str):
 
@@ -73,6 +83,16 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # This game has multiple "rounds" or "turns".  So loop through a
     # sequence of alternating between requests "await-turn" and "move":
 
+    # generate the board dynamically
+    game_board = create_board(input("Enter the height of the board: ", input("Endter the width of the board: ")))
+    print(game_board)
+
+    # create the game state
+    game_state = {
+        "Lines": game_board,
+        "Weights": []}
+
+    # allow user to specify type of game
     type_of_game = input("Enter either 'person' if you would like to enter the moves, or 'computer' if you would like the computer to enter the moves: ").lower()
     print(type_of_game)
 
@@ -86,6 +106,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             try:
                 result = await_turn.json()["result"]
                 print(result)
+                # here is where we get the enemy move, which we can take as input
                 try:
                     previous_move = result["history"][0]["move"]
                     print("Results for last move: ", previous_move, type(previous_move))
@@ -123,9 +144,15 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
         # submit my move:
 
-        if type_of_game == 'person':
-            move_instruction = input("Enter a move: ")
+        print(visualize_game(game_state=game_state))
 
+        if type_of_game == 'person':
+
+            # call move functions, with game state and play move as args
+            human_move = make_a_move_from_input(game_state, human_player_move())
+            
+            # this will be sent to the server
+            move_instruction = human_move
             print("\nSending my choice of", move_instruction)
 
             submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
@@ -138,12 +165,11 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
         if type_of_game == 'computer':
 
-            move_instruction_source = choice(["(0, 0)", "(0, 1)", "(0, 2)", "(0, 3)", "(1, 0)", "(1, 1)", "(1, 2)", "(1, 3)", "(2, 0)", "(2, 1)", "(2, 2)", "(2, 3)", "(3, 0)", "(3, 1)", "(3, 2)", "(3, 3)"])
+            # call move functions, with game state and play move as args
+            computer_move = make_a_move_from_input(game_state, make_a_move_randomly(game_state))
 
-            move_instruction_target = choice(["(0, 0)", "(0, 1)", "(0, 2)", "(0, 3)", "(1, 0)", "(1, 1)", "(1, 2)", "(1, 3)", "(2, 0)", "(2, 1)", "(2, 2)", "(2, 3)", "(3, 0)", "(3, 1)", "(3, 2)", "(3, 3)"])
-
-            move_instruction = move_instruction_source + ',' + move_instruction_target
-
+            # this will be sent to the server
+            move_instruction = computer_move
             print("\nSending my choice of", move_instruction)
 
             submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
