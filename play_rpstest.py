@@ -19,7 +19,7 @@ Options:
 
 """
 
-# from A5_prototype.HTL_vel_game_rules_n_misc_draft import create_board, human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
+from HTL_game_rules_n_misc import human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
 import requests
 import docopt
 from random import choice, choices, randint
@@ -27,7 +27,7 @@ import json
 from time import sleep
 import logging
 import os
-os.system("python HTL_vel_game_rules_n_misc_draft.py")
+os.system("python HTL_game_rules_n_misc.py")
 # logging.basicConfig(level=logging.DEBUG)
 
 

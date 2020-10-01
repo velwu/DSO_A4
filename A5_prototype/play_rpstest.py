@@ -27,7 +27,7 @@ import json
 from time import sleep
 import logging
 import os
-os.system("python HTL_vel_game_rules_n_misc_draft.py")
+os.system("python HTL_game_rules_n_misc.py")
 # logging.basicConfig(level=logging.DEBUG)
 
 

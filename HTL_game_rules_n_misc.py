@@ -77,6 +77,8 @@ def intersect(A,B,C,D):
         return True
     elif IsOverlapping(A,B,D) or IsOverlapping(B, D, A):
         return True
+    elif A == C and IsOverlapping(A, D, B):
+        return True
 
     return False
 
@@ -104,7 +106,7 @@ def make_a_move_from_input(game_state, move_syntax):
                 print("INVALID MOVE: Intersecting lines!:",
                       "Line*", game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], "*",
                       "crossed with Line *", game_state["Lines"][0], move_parsed[1], "*")
-                return game_state
+                return game_state, move_syntax
         print("LEGAL MOVE: At head endpoint")
         game_state["Lines"].insert(0, move_parsed[1])
 
@@ -114,7 +116,7 @@ def make_a_move_from_input(game_state, move_syntax):
                 print("INVALID MOVE: Intersecting lines!:",
                       "Line*", game_state["Lines"][ele_idx], game_state["Lines"][ele_idx+1], "*",
                       "crossed with Line *", game_state["Lines"][-1], move_parsed[1], "*")
-                return game_state
+                return game_state, move_syntax
         print("LEGAL MOVE: At tail endpoint")
         game_state["Lines"].append(move_parsed[1])
 
@@ -127,8 +129,10 @@ def make_a_move_from_input(game_state, move_syntax):
 
 def human_player_move():
     #TODO: Complete this function
-    input("(0,0),(2,1)")
-    print()
+    print("Please input your moves in the form of '(x1, y1), (x2, y2)'")
+    player_input = input()
+    return player_input
+
 
 
 def visualize_game(game_state):
