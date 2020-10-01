@@ -1,10 +1,15 @@
-import A5_prototype.HTL_vel_game_rules_n_misc_draft as drafty
+import HTL_vel_game_rules_n_misc_draft as drafty
 
 """
 TEST CODES BELOW:
 """
 
-# This test should be successful
+
+game_state_example_0 = {
+    "Lines": [],
+    "Weights": []
+}
+
 game_state_example_1 = {
     "Lines": [(0,0), (0,1), (0,2), (0,3), (1,2)],
     "Weights": []
@@ -16,7 +21,11 @@ game_state_example_2 = {
     "Weights": []
 }
 
-# Test 1, 2, 5 should pass, while 3 and 4 should fail
+# Test 0, 1, 2, 5 should pass, while 3 and 4 should fail
+print("Test 0")
+test_0 = drafty.make_a_move_from_input(game_state_example_0, "(1,1), (4,4)")
+print("move made:", str(test_0[1]), "; Current State:",test_0[0]["Lines"], "\n")
+
 print("Test 1")
 test_1 = drafty.make_a_move_from_input(game_state_example_1, "(1,2),(3,1)")
 print("move made:", str(test_1[1]), "; Current State:",test_1[0]["Lines"], "\n")
@@ -37,8 +46,6 @@ print("Current State:", test_4["Lines"], "\n")
 print("Test 5")
 test_5 = drafty.make_a_move_from_input(game_state_example_2, "(0,2),(0,3)")
 print("move made:", str(test_5[1]), "; Current State:",test_5[0]["Lines"], "\n")
-
-
 
 
 #make_a_move_from_input(game_state_example, "(1,2),(0,3)")

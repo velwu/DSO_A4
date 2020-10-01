@@ -91,6 +91,12 @@ def make_a_move_randomly(game_state):
 def make_a_move_from_input(game_state, move_syntax):
     move_parsed = eval(move_syntax)
 
+    if len(game_state["Lines"]) == 0:
+        print("LEGAL MOVE: First move in the game")
+        game_state["Lines"].append(move_parsed[0])
+        game_state["Lines"].append(move_parsed[1])
+        return game_state, move_syntax
+
     #if move_parsed not in game_state["Lines"]:
     if move_parsed[0] == game_state["Lines"][0] and move_parsed[1] not in game_state["Lines"]:
         for ele_idx, ele_value in enumerate(game_state["Lines"][:-1]):
