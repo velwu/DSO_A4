@@ -36,9 +36,9 @@ def create_board(height, width):
     for h in range(height):
         for w in range(width):
             board_as_list.append((h, w))
-    return board_as_list
+    return board_as_list, height,width
 
-def play_rps(game_server_url: str, netid: str, player_key: str):
+def play_rps(game_server_url, netid, player_key):
 
     # start a fresh session with blank cookies:
     session = requests.Session()
@@ -89,7 +89,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
     # create the game state
     game_state = {
-        "Lines": game_board,
+        "Lines": [],
         "Weights": []}
 
     # allow user to specify type of game
