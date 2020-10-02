@@ -19,15 +19,14 @@ Options:
 
 """
 
-from HTL_game_rules_n_misc import human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
 import requests
 import docopt
 from random import choice, choices, randint
 import json
 from time import sleep
 import logging
-import os
-os.system("python HTL_game_rules_n_misc.py")
+import HTL_game_rules_n_misc as game_rules_n_misc
+import copy
 # logging.basicConfig(level=logging.DEBUG)
 
 
@@ -84,17 +83,15 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # sequence of alternating between requests "await-turn" and "move":
 
     # generate the board dynamically
-    game_board = create_board(int(input("Enter the height of the board: ")), int(input("Endter the width of the board: ")))
-    print(game_board)
+    custom_coords = create_board(int(input("Enter the height of the board: ")), int(
+        input("Endter the width of the board: ")))
 
     # create the game state
-    game_state = {
-        "Lines": game_board,
+    game_state_example_0 = {
+        "Lines": [],
         "Weights": []}
 
-    # allow user to specify type of game
-    type_of_game = input("Enter either 'person' if you would like to enter the moves, or 'computer' if you would like the computer to enter the moves: ").lower()
-    print(type_of_game)
+    selected_game_state = game_state_example_0
 
     while True:
         # wait for my turn:
@@ -111,6 +108,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
                     if result[0]['turn_number'] != 1:
                         previous_move = result["history"][0]["move"]
                         print("Results for last move: ", previous_move, type(previous_move))
+                        selected_game_state = selected_game_state.append(previous_move)
                         print()
                     else:
                         continue
@@ -147,41 +145,26 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
         # submit my move:
 
-        print(visualize_game(game_state=game_state))
+        print(game_rules_n_misc.visualize_game(game_state=game_state_example_0["Lines"]))
 
-        if type_of_game == 'person':
+        # call move functions, with game state and play move as args
+        sam_vel_rajath_move = game_rules_n_misc.make_a_move_randomly((game_state_example_0), custom_coords)
 
-            # call move functions, with game state and play move as args
-            human_move = make_a_move_from_input(game_state, human_player_move())
-            
-            # this will be sent to the server
-            move_instruction = human_move
-            print("\nSending my choice of", move_instruction)
+        next_game_state = sam_vel_rajath_move[0]
 
-            submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
-                                       json={"move": move_instruction})
-            move_result = submit_move.json()["result"]
-            print(move_result)
-            if move_result["match_status"] in ["game over", "scored, final"]:
-                print('Game over?  Who won?')
-                break
+        selected_game_state = next_game_state
 
-        if type_of_game == 'computer':
+        # this will be sent to the server
+        move_instruction = sam_vel_rajath_move[1]
+        print("\nSending my choice of", move_instruction)
 
-            # call move functions, with game state and play move as args
-            computer_move = make_a_move_from_input(game_state, make_a_move_randomly(game_state))
-
-            # this will be sent to the server
-            move_instruction = computer_move
-            print("\nSending my choice of", move_instruction)
-
-            submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
-                                    json={"move": move_instruction})
-            move_result = submit_move.json()["result"]
-            print(move_result)
-            if move_result["match_status"] in ["game over", "scored, final"]:
-                print('Game over?  Who won?')
-                break
+        submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
+                                json={"move": move_instruction})
+        move_result = submit_move.json()["result"]
+        print(move_result)
+        if move_result["match_status"] in ["game over", "scored, final"]:
+            print('Game over?  Who won?')
+            break
 
         """Insert a small delay to reduce the chance of cPanel server throttling 
         this client, and to simulate the "thinking time" of a more challenging game."""
