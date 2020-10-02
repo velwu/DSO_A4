@@ -5,6 +5,7 @@ import copy
 import json
 from os import error
 from datetime import datetime
+from random import shuffle
 
 
 # one line drawn by any player is represented as: [(0,0), (0,1), (0,2), (0,3)], [(2,0), (2,1), (2,2), (2,3)], etc.
@@ -96,11 +97,10 @@ game_state_example_1 = {
 }
 
 #print("Test inter", intersect((1, 1), (0, 1), (3, 2), (3, 1)))
-board_coordinates = [(x, y) for x in range(4) for y in range(0, 4)]
-from random import shuffle
+#TODO: This can be merged with Sam's create_board function to provide board_coordinates based on user input
 
-
-def make_a_move_randomly(game_state):
+# board_coordinates = [(x, y) for x in range(4) for y in range(0, 4)]
+def make_a_move_randomly(game_state, board_coordinates):
     possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
     shuffle(possible_coordinates)
     intersection = False
@@ -134,7 +134,9 @@ def make_a_move_from_input(game_state, move_syntax):
                 print("INVALID MOVE: Intersecting lines!:",
                       "Line*", game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], "*",
                       "crossed with Line *", game_state["Lines"][0], move_parsed[1], "*")
-                return game_state, move_syntax
+                #return game_state, move_syntax
+                print("Current game state:", game_state["Lines"])
+                return None
         print("LEGAL MOVE: At head endpoint")
         game_state["Lines"].insert(0, move_parsed[1])
 
@@ -145,7 +147,9 @@ def make_a_move_from_input(game_state, move_syntax):
                 print("INVALID MOVE: Intersecting lines!:",
                       "Line*", game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], "*",
                       "crossed with Line *", game_state["Lines"][-1], move_parsed[1], "*")
-                return game_state, move_syntax
+                print("Current game state:", game_state["Lines"])
+                #return game_state, move_syntax
+                return None
         print("LEGAL MOVE: At tail endpoint")
         game_state["Lines"].append(move_parsed[1])
 

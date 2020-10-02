@@ -1,5 +1,7 @@
 import HTL_game_rules_n_misc as game_rules_n_misc
-
+import time
+import copy
+from play_rpstest import create_board
 """
 TEST CODES BELOW:
 """
@@ -39,11 +41,11 @@ if test_input == "demo":
 
     print("Test 3")
     test_3 = game_rules_n_misc.make_a_move_from_input(game_state_example_1, "(2,1),(3,2)")
-    print("Current State:",test_3[0]["Lines"], "\n")
+    print("Current State:",game_state_example_1["Lines"], "\n")
 
     print("Test 4")
     test_4 = game_rules_n_misc.make_a_move_from_input(game_state_example_2, "(0,2),(0,0)")
-    print("Current State:", test_4[0]["Lines"], "\n")
+    print("Current State:", game_state_example_2["Lines"], "\n")
 
     # test_5 should pass
     print("Test 5")
@@ -51,21 +53,33 @@ if test_input == "demo":
     print("move made:", str(test_5[1]), "; Current State:",test_5[0]["Lines"], "\n")
 
 elif test_input == "play":
+    # This create_board() is imported. Might need to merge these back to play_rptest.py
+    custom_coords = create_board(int(input("Enter the height of the board: ")), int(input("Endter the width of the board: ")))
+
     print("Loading game state 0")
     selected_game_state = game_state_example_0
     while True:
-        player_input = input('Input command: "(x1, y1),(x2,y2)"  or type Q to quit')
+        player_input = input('Input command: "(x1, y1),(x2,y2)"  or type Q to quit \n')
         #TODO: Enforce a input type check somewhere~~
         #TODO: Create a dimension limit based on player input (essentially play_rptest.create_board())
         if player_input in ['q', 'Q']:
             print("Guess we're done here. Bye!")
             break
-        next_game_state = game_rules_n_misc.make_a_move_from_input(game_state_example_0, player_input)
+        try:
+            next_game_state = game_rules_n_misc.make_a_move_from_input(game_state_example_0, player_input)[0]
+            if next_game_state == None:
+                continue
+        except:
+            print("Input format must be (x1, y1),(x2,y2). Try again!")
+            continue
         selected_game_state = next_game_state
-        print("Current game state:", selected_game_state[0]["Lines"])
+        print("Current game state:", selected_game_state["Lines"])
+        print("Waiting for computer's move...")
+        time.sleep(2)
+        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
+        print("Computer made a move")
+        print("Current game state:", selected_game_state["Lines"])
         continue
 #make_a_move_from_input(game_state_example, "(1,2),(0,3)")
 
 #print(intersect((0,0), (2,1), (1,1), (2,0)))
-
-#make_a_move_randomly()
