@@ -36,7 +36,7 @@ def create_board(height, width):
     for h in range(height):
         for w in range(width):
             board_as_list.append((h, w))
-    return board_as_list
+    return board_as_list, height, width
 
 def play_rps(game_server_url: str, netid: str, player_key: str):
 

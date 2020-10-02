@@ -116,9 +116,42 @@ def make_a_move_randomly(game_state, board_coordinates):
     print("No Valid moves from present state")
     return game_state
 
+def is_game_over(game_state,board_coordinates):
+    possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
+    # num_possible_moves = []
+    num_possible_moves = 0
+    for coordinates in possible_coordinates:
+        intersection = False
+        for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
+            intersection = intersect(game_state["Lines"][-1], coordinates, p1, p2)
+            if intersection == True:
+                break
+        if intersection == False:
+            num_possible_moves += 1
+    #TODO: Evaluate whether it is better for num_possible_moves to be a list of moves instead of just a counter
 
-def make_a_move_from_input(game_state, move_syntax):
+    if num_possible_moves > 0:
+        print("Still", num_possible_moves, "possible moves left.")
+        return False, num_possible_moves
+    elif num_possible_moves == 0:
+        print("No possible moves left. The game is over.")
+        return True, num_possible_moves
+
+
+def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
     move_parsed = eval(move_syntax)
+
+    if move_parsed[0][0] < 0 or move_parsed[0][1] < 0 or move_parsed[1][0] < 0 or move_parsed[1][1] < 0:
+        print("INVALID MOVE: Coordinates cannot be negative integers!")
+        return None
+
+    if move_parsed[0][0] > height_limit or move_parsed[1][0] > height_limit:
+        print("INVALID MOVE: Height limit exceeded by", move_parsed[0] - height_limit)
+        return None
+
+    if move_parsed[0][1] > width_limit or move_parsed[1][1] > width_limit:
+        print("INVALID MOVE: Width limit exceeded by", move_parsed[1] - width_limit)
+        return None
 
     if len(game_state["Lines"]) == 0:
         print("LEGAL MOVE: First move in the game")
