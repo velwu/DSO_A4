@@ -8,7 +8,8 @@ TEST CODES BELOW:
 
 
 game_state_example_0 = {
-    "Lines": [(0,0), (0,1)],
+
+    "Lines": [],
     "Weights": []
 }
 

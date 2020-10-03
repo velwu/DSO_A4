@@ -84,7 +84,7 @@ def play_rps(game_server_url, netid, player_key):
     # sequence of alternating between requests "await-turn" and "move":
 
     # generate the board dynamically
-    game_board = create_board(int(input("Enter the height of the board: ")), int(input("Endter the width of the board: ")))
+    game_board,height_limit, width_limit = create_board(int(input("Enter the height of the board: ")), int(input("Endter the width of the board: ")))
     print(game_board)
 
     # create the game state
@@ -100,6 +100,7 @@ def play_rps(game_server_url, netid, player_key):
         # wait for my turn:
         while True:
             print('\n\nrequesting await-turn now.')
+
             await_turn = session.get(
                 url=game_server_url + "match/{}/await-turn".format(match_id))
             print(await_turn.text)
@@ -150,12 +151,17 @@ def play_rps(game_server_url, netid, player_key):
         print(visualize_game(game_state=game_state))
 
         if type_of_game == 'person':
+            print("Current Game State - ", game_state['Lines'])
+
+            print("Possbile moves from the present state - ", [x for x in game_board if x not in game_state['Lines']])
 
             # call move functions, with game state and play move as args
-            human_move = make_a_move_from_input(game_state, human_player_move())
+            game_state, human_move = make_a_move_from_input(game_state, human_player_move(),height_limit, width_limit)
             
             # this will be sent to the server
             move_instruction = human_move
+
+
             print("\nSending my choice of", move_instruction)
 
             submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
@@ -169,7 +175,7 @@ def play_rps(game_server_url, netid, player_key):
         if type_of_game == 'computer':
 
             # call move functions, with game state and play move as args
-            computer_move = make_a_move_from_input(game_state, make_a_move_randomly(game_state))
+            game_state,computer_move = make_a_move_from_input(game_state, make_a_move_randomly(game_state,game_board),height_limit, width_limit)
 
             # this will be sent to the server
             move_instruction = computer_move

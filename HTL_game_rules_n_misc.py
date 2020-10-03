@@ -94,6 +94,8 @@ def intersect(A, B, C, D):
 def formatter(a,b):
     return str(a).replace(" ","")+","+str(b).replace(" ","")
 
+
+
 game_state_example_1 = {
     "Lines": [(0, 0), (1, 0), (2, 0), (2, 1), (3, 1), (3, 2), (2, 2), (2, 3), (1, 3), (1, 2), (0, 2), (1, 1)],
     "Weights": []
@@ -111,7 +113,7 @@ def make_a_move_randomly(game_state, board_coordinates):
     intersection = False
     position = choice([0,1])
     if len(game_state['Lines'])==0:
-        game_state['Lines'].append(possible_coordinates[0])
+        game_state['Lines'].append((0,0))
         game_state['Lines'].append(possible_coordinates[1])
         print(game_state['Lines'], formatter(game_state["Lines"][0], game_state["Lines"][1]))
         return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
@@ -166,7 +168,9 @@ def is_game_over(game_state,board_coordinates):
 
 
 def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
+    print("move syntax = ",move_syntax[1])
     move_parsed = eval(move_syntax)
+    print("Move Parsed = ",move_parsed )
 
     if move_parsed[0][0] < 0 or move_parsed[0][1] < 0 or move_parsed[1][0] < 0 or move_parsed[1][1] < 0:
         print("INVALID MOVE: Coordinates cannot be negative integers!")
@@ -184,7 +188,7 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
         print("LEGAL MOVE: First move in the game")
         game_state["Lines"].append(move_parsed[0])
         game_state["Lines"].append(move_parsed[1])
-        return game_state, move_syntax
+        return game_state, str(move_syntax)
 
     # if move_parsed not in game_state["Lines"]:
     if move_parsed[0] == game_state["Lines"][0] and move_parsed[1] not in game_state["Lines"]:
@@ -216,7 +220,7 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
     else:
         print("INVALID MOVE: NO CHANGES MADE")
 
-    return game_state, move_syntax
+    return game_state, str(move_syntax)
     # print(game_state)
     # visualize_game(game_state)
 
