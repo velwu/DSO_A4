@@ -91,6 +91,8 @@ def intersect(A, B, C, D):
 
     return False
 
+def formatter(a,b):
+    return str(a).replace(" ","")+","+str(b).replace(" ","")
 
 game_state_example_1 = {
     "Lines": [(0, 0), (1, 0), (2, 0), (2, 1), (3, 1), (3, 2), (2, 2), (2, 3), (1, 3), (1, 2), (0, 2), (1, 1)],
@@ -105,21 +107,28 @@ game_state_example_1 = {
 def make_a_move_randomly(game_state, board_coordinates):
     possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
     shuffle(possible_coordinates)
+
     intersection = False
     position = choice([0,1])
+    if len(game_state['Lines'])==0:
+        game_state['Lines'].append(possible_coordinates[0])
+        game_state['Lines'].append(possible_coordinates[1])
+        print(game_state['Lines'], formatter(game_state["Lines"][0], game_state["Lines"][1]))
+        return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
 
     if (position == 0):
         print("Making a move at the Head")
         for coordinates in possible_coordinates:
             intersection = False
             for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
-                intersection = intersect(game_state["Lines"][-1], coordinates, p1, p2)
+                intersection = intersect(game_state["Lines"][0], coordinates, p1, p2)
                 if intersection == True:
                     break
             if intersection == False:
                 game_state["Lines"].insert(0, coordinates)
-                return game_state
+                return game_state,formatter(game_state["Lines"][0],game_state["Lines"][1])
         print("No Valid moves from present state")
+
     elif (position == 1):
         print("Making a move at the Tail")
         for coordinates in possible_coordinates:
@@ -130,9 +139,9 @@ def make_a_move_randomly(game_state, board_coordinates):
                     break
             if intersection == False:
                 game_state["Lines"].append(coordinates)
-                return game_state
+                return game_state,formatter(game_state["Lines"][0],game_state["Lines"][1])
         print("No Valid moves from present state")
-    return game_state
+    return game_state,None
 
 def is_game_over(game_state,board_coordinates):
     possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]

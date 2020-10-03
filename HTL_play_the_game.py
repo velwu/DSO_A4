@@ -8,7 +8,7 @@ TEST CODES BELOW:
 
 
 game_state_example_0 = {
-    "Lines": [],
+    "Lines": [(0,0), (0,1)],
     "Weights": []
 }
 
@@ -97,8 +97,10 @@ elif test_input == "demo":
     print("Loading game state 0")
     selected_game_state = game_state_example_0
     while True:
-        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
+        selected_game_state,coordinates = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
         print("Computer made a move")
+        #print(selected_game_state)
+        #print(type(selected_game_state["Lines"]))
         print("Current game state:", selected_game_state["Lines"])
         if game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == False:
             continue
