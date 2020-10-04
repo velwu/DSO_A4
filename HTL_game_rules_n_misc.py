@@ -219,6 +219,7 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
 
     else:
         print("INVALID MOVE: NO CHANGES MADE")
+        return None
 
     return game_state, str(move_syntax)
     # print(game_state)

@@ -81,7 +81,7 @@ elif test_input == "play":
         print("Current game state:", selected_game_state["Lines"])
         print("Waiting for computer's move...")
         time.sleep(2)
-        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
+        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)[0]
         print("Computer made a move")
         print("Current game state:", selected_game_state["Lines"])
         continue
