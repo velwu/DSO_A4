@@ -19,18 +19,16 @@ Options:
 
 """
 
+from HTL_game_rules_n_misc import human_player_move, intersect, make_a_move_from_input, make_a_move_randomly, visualize_game
 import requests
 import docopt
 from random import choice, choices, randint
 import json
 from time import sleep
 import logging
-import HTL_game_rules_n_misc as game_rules_n_misc
-import copy
+import os
+os.system("python HTL_game_rules_n_misc.py")
 # logging.basicConfig(level=logging.DEBUG)
-
-custom_coords = [(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3),
- (2, 0), (2, 1), (2, 2), (2, 3), (3, 0), (3, 1), (3, 2), (3, 3)]
 
 
 def create_board(height, width):
@@ -38,9 +36,9 @@ def create_board(height, width):
     for h in range(height):
         for w in range(width):
             board_as_list.append((h, w))
-    return board_as_list, height, width
+    return board_as_list, height,width
 
-def play_rps(game_server_url: str, netid: str, player_key: str):
+def play_rps(game_server_url, netid, player_key):
 
     # start a fresh session with blank cookies:
     session = requests.Session()
@@ -63,8 +61,8 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # search for a multi-round, 2-player "Rock, Paper, Scissors":
     game_id = False
     for g in result:
-        print(result)
-        print(g['fullname'])
+        # print(result)
+        # print(g['fullname'])
         if (g['category'] == 'hold_that_line' or 'Hold That Line' in g['fullname'].lower()):
             game_id = g['id']
 
@@ -86,43 +84,39 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # sequence of alternating between requests "await-turn" and "move":
 
     # generate the board dynamically
-    # custom_coords = create_board(int(input("Enter the height of the board: ")), int(
-    #     input("Endter the width of the board: ")))
+    game_board,height_limit, width_limit = create_board(int(input("Enter the height of the board: ")), int(input("Endter the width of the board: ")))
+    print(game_board)
 
     # create the game state
-    game_state_example_0 = {
+    game_state = {
         "Lines": [],
         "Weights": []}
 
-    selected_game_state = game_state_example_0
+    # allow user to specify type of game
+    type_of_game = input("Enter either 'person' if you would like to enter the moves, or 'computer' if you would like the computer to enter the moves: ").lower()
+    print(type_of_game)
 
     while True:
         # wait for my turn:
         while True:
             print('\n\nrequesting await-turn now.')
+
             await_turn = session.get(
                 url=game_server_url + "match/{}/await-turn".format(match_id))
-            print("Waiting for the next turn: ", await_turn.text)
-            print()
+            print(await_turn.text)
             try:
                 result = await_turn.json()["result"]
-                print("Enemy move: ", result)
+                print(result)
                 # here is where we get the enemy move, which we can take as input
-                # try:
-                if result['history'] != []:
-                    print(result['history'])
-                    previous_move = result["history"][0]["move"]
-                    r_move = previous_move.replace("),(", ") (")
-                    re_move = r_move.split(" ")
-                    # print("Results for last move: ", re_move, type(re_move))
-                    for r in re_move:
-                        selected_game_state["Lines"].append(r)
-                    print("Current Game State: ", selected_game_state)
-                    print()
-                else:
-                    selected_game_state["Lines"].append(choice(custom_coords))
-            except KeyError:
-                print("Other Player not connected yet")
+                try:
+                    if result[0]['turn_number'] != 1:
+                        previous_move = result["history"][0]["move"]
+                        print("Results for last move: ", previous_move, type(previous_move))
+                        print()
+                    else:
+                        continue
+                except KeyError:
+                    print("Other Player not connected yet")
             except json.decoder.JSONDecodeError:
                 print('Unexpected Server Response. Not valid JSON.')
                 sleep(15)
@@ -154,35 +148,46 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
         # submit my move:
 
-        # call move functions, with game state and play move as args
+        print(visualize_game(game_state=game_state))
 
-        sam_vel_rajath_move = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
+        if type_of_game == 'person':
+            print("Current Game State - ", game_state['Lines'])
 
-        # next_game_state = sam_vel_rajath_move[0]
+            print("Possbile moves from the present state - ", [x for x in game_board if x not in game_state['Lines']])
 
-        test = selected_game_state["Lines"][-1]
-        print("My move state: ", selected_game_state)
-        print("My move move: ", test)
+            # call move functions, with game state and play move as args
+            game_state, human_move = make_a_move_from_input(game_state, human_player_move(),height_limit, width_limit)
+            
+            # this will be sent to the server
+            move_instruction = human_move
 
 
-        move_str = str(selected_game_state["Lines"][-1]) + "," + str(sam_vel_rajath_move[1])
+            print("\nSending my choice of", move_instruction)
 
-        print(move_str, type(move_str))
-        selected_game_state["Lines"].append(move_str)
-        # this will be sent to the server
-        move_instruction = move_str
-        print("\nSending my choice of", move_instruction)
+            submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
+                                       json={"move": move_instruction})
+            move_result = submit_move.json()["result"]
+            print(move_result)
+            if move_result["match_status"] in ["game over", "scored, final"]:
+                print('Game over?  Who won?')
+                break
 
-        submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
-                                json={"move": move_instruction})
+        if type_of_game == 'computer':
 
-        print("Possible Error: ", submit_move.json())
+            # call move functions, with game state and play move as args
+            game_state,computer_move = make_a_move_from_input(game_state, make_a_move_randomly(game_state,game_board),height_limit, width_limit)
 
-        move_result = submit_move.json()["result"]
-        print(move_result)
-        if move_result["match_status"] in ["game over", "scored, final"]:
-            print('Game over?  Who won?')
-            break
+            # this will be sent to the server
+            move_instruction = computer_move
+            print("\nSending my choice of", move_instruction)
+
+            submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
+                                    json={"move": move_instruction})
+            move_result = submit_move.json()["result"]
+            print(move_result)
+            if move_result["match_status"] in ["game over", "scored, final"]:
+                print('Game over?  Who won?')
+                break
 
         """Insert a small delay to reduce the chance of cPanel server throttling 
         this client, and to simulate the "thinking time" of a more challenging game."""

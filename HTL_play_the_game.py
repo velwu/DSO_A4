@@ -8,6 +8,7 @@ TEST CODES BELOW:
 
 
 game_state_example_0 = {
+
     "Lines": [],
     "Weights": []
 }
@@ -61,9 +62,7 @@ elif test_input == "play":
         custom_coords, height_limit, width_limit = create_board(4, 4)
 
     print("Loading game state 0")
-    print()
     selected_game_state = game_state_example_0
-    print("Selected Game: :", selected_game_state)
     while True:
         player_input = input('Input command: "(x1, y1),(x2,y2)"  or type Q to quit \n')
         #TODO: Enforce a input type check somewhere~~
@@ -79,15 +78,12 @@ elif test_input == "play":
             print("Input format must be (x1, y1),(x2,y2) and within height/width limits. Try again!")
             continue
         selected_game_state = next_game_state
-        print("Selected Game: :", selected_game_state)
-        print()
-        # print("Current game state:", selected_game_state["Lines"])
+        print("Current game state:", selected_game_state["Lines"])
         print("Waiting for computer's move...")
         time.sleep(2)
-        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)[0]
+        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
         print("Computer made a move")
         print("Current game state:", selected_game_state["Lines"])
-        # 
         continue
 #make_a_move_from_input(game_state_example, "(1,2),(0,3)")
 
@@ -102,8 +98,10 @@ elif test_input == "demo":
     print("Loading game state 0")
     selected_game_state = game_state_example_0
     while True:
-        selected_game_state = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)[0]
+        selected_game_state,coordinates = game_rules_n_misc.make_a_move_randomly(selected_game_state, custom_coords)
         print("Computer made a move")
+        #print(selected_game_state)
+        #print(type(selected_game_state["Lines"]))
         print("Current game state:", selected_game_state["Lines"])
         if game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == False:
             continue

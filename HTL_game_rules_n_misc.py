@@ -1,3 +1,4 @@
+
 import random
 import copy
 import numpy as np
@@ -5,7 +6,8 @@ import copy
 import json
 from os import error
 from datetime import datetime
-from random import shuffle
+from random import shuffle,choice
+
 
 
 # one line drawn by any player is represented as: [(0,0), (0,1), (0,2), (0,3)], [(2,0), (2,1), (2,2), (2,3)], etc.
@@ -89,6 +91,10 @@ def intersect(A, B, C, D):
 
     return False
 
+def formatter(a,b):
+    return str(a).replace(" ","")+","+str(b).replace(" ","")
+
+
 
 game_state_example_1 = {
     "Lines": [(0, 0), (1, 0), (2, 0), (2, 1), (3, 1), (3, 2), (2, 2), (2, 3), (1, 3), (1, 2), (0, 2), (1, 1)],
@@ -101,28 +107,43 @@ game_state_example_1 = {
 
 # board_coordinates = [(x, y) for x in range(4) for y in range(0, 4)]
 def make_a_move_randomly(game_state, board_coordinates):
-    print("G state: ", game_state)
-    print("board coords: ", board_coordinates)
-    if game_state['Lines'] == None:
-        possible_coordinates = board_coordinates
-    else:
-        possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
-        print(possible_coordinates)
+    possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
     shuffle(possible_coordinates)
+
     intersection = False
-    for coordinates in possible_coordinates:
-        intersection = False
-        for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
-            intersection = intersect(game_state["Lines"][-1], coordinates, p1, p2)
-            if intersection == True:
-                break
-        if intersection == False:
-            #game_state["Lines"].append(str(coordinates))
-            game_state["Lines"].append(coordinates)
-            print(game_state, coordinates)
-            return game_state, coordinates
-    print("No Valid moves from present state")
-    return game_state
+    position = choice([0,1])
+    if len(game_state['Lines'])==0:
+        game_state['Lines'].append((0,0))
+        game_state['Lines'].append(possible_coordinates[1])
+        print(game_state['Lines'], formatter(game_state["Lines"][0], game_state["Lines"][1]))
+        return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
+
+    if (position == 0):
+        print("Making a move at the Head")
+        for coordinates in possible_coordinates:
+            intersection = False
+            for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
+                intersection = intersect(game_state["Lines"][0], coordinates, p1, p2)
+                if intersection == True:
+                    break
+            if intersection == False:
+                game_state["Lines"].insert(0, coordinates)
+                return game_state,formatter(game_state["Lines"][0],game_state["Lines"][1])
+        print("No Valid moves from present state")
+
+    elif (position == 1):
+        print("Making a move at the Tail")
+        for coordinates in possible_coordinates:
+            intersection = False
+            for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
+                intersection = intersect(game_state["Lines"][-1], coordinates, p1, p2)
+                if intersection == True:
+                    break
+            if intersection == False:
+                game_state["Lines"].append(coordinates)
+                return game_state,formatter(game_state["Lines"][0],game_state["Lines"][1])
+        print("No Valid moves from present state")
+    return game_state,None
 
 def is_game_over(game_state,board_coordinates):
     possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
@@ -147,7 +168,9 @@ def is_game_over(game_state,board_coordinates):
 
 
 def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
+    print("move syntax = ",move_syntax[1])
     move_parsed = eval(move_syntax)
+    print("Move Parsed = ",move_parsed )
 
     if move_parsed[0][0] < 0 or move_parsed[0][1] < 0 or move_parsed[1][0] < 0 or move_parsed[1][1] < 0:
         print("INVALID MOVE: Coordinates cannot be negative integers!")
@@ -165,7 +188,7 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
         print("LEGAL MOVE: First move in the game")
         game_state["Lines"].append(move_parsed[0])
         game_state["Lines"].append(move_parsed[1])
-        return game_state, move_syntax
+        return game_state, str(move_syntax)
 
     # if move_parsed not in game_state["Lines"]:
     if move_parsed[0] == game_state["Lines"][0] and move_parsed[1] not in game_state["Lines"]:
@@ -196,9 +219,8 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
 
     else:
         print("INVALID MOVE: NO CHANGES MADE")
-        return None
 
-    return game_state, move_syntax
+    return game_state, str(move_syntax)
     # print(game_state)
     # visualize_game(game_state)
 
@@ -220,5 +242,5 @@ def visualize_game(game_state):
         board_for_printing[each_col_value[0]][each_col_value[1]] = "*"
     iterator = 0
     for i in range(0, len(board_for_printing)):
-        print(*board_for_printing[iterator])
+        print(board_for_printing[iterator])
         iterator += 1
