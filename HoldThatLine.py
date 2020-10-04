@@ -5,21 +5,19 @@ import json
 
 #randomly pick the dimensions
 
-board_arr = np.array([[(0,0), (0,1), (0,2), (0,3)], [(1,0), (1,1), (1,2), (1,3)], [(2,0), (2,1), (2,2), (2,3)], [(3,0), (3,1), (3,2), (3,3)]])
-#print(board_arr)
 
+def create_board(height, width):
+    board_as_list = []
+    for h in range(height):
+        for w in range(width):
+            board_as_list.append((h, w))
+    return board_as_list
 
-board = [[(0,0), (0,1), (0,2), (0,3)], [(1,0), (1,1), (1,2), (1,3)], [(2,0), (2,1), (2,2), (2,3)], [(3,0), (3,1), (3,2), (3,3)]]
-#print(board)
+board = create_board(int(input("Enter the height: ")), int(input("Enter the width: ")))
 
 made_moves = []
 connected_moves = []
-dims = len(board)
-dims2 = len(board[0])
-print(dims)
-print(dims2)
 
-#board_stack = copy.deepcopy(board_arr)
 
 for row in board:
     for move in row:
