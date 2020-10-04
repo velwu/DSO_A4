@@ -3,7 +3,19 @@ import time
 import copy
 from play_rpstest import create_board
 """
-TEST CODES BELOW:
+RUN THIS FILE USING PYCHARM OR OTHER PYTHON INTERPRETERS
+
+Modes and what do they do:
+
+1. "play"
+- Starts a game where you the human player goes against a computer in the local console
+
+2. "demo"
+- Showcases 2 computers playing against each other in a board with width & height of your specification
+
+3. "test"
+- Runs a few test objects, and display some valid and invalid moves.
+
 """
 
 
