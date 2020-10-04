@@ -101,7 +101,13 @@ game_state_example_1 = {
 
 # board_coordinates = [(x, y) for x in range(4) for y in range(0, 4)]
 def make_a_move_randomly(game_state, board_coordinates):
-    possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
+    print("G state: ", game_state)
+    print("board coords: ", board_coordinates)
+    if game_state['Lines'] == None:
+        possible_coordinates = board_coordinates
+    else:
+        possible_coordinates = [x for x in board_coordinates if x not in game_state['Lines']]
+        print(possible_coordinates)
     shuffle(possible_coordinates)
     intersection = False
     for coordinates in possible_coordinates:
@@ -111,7 +117,8 @@ def make_a_move_randomly(game_state, board_coordinates):
             if intersection == True:
                 break
         if intersection == False:
-            game_state["Lines"].append(coordinates)
+            game_state["Lines"].append(str(coordinates))
+            print(game_state, coordinates)
             return game_state, coordinates
     print("No Valid moves from present state")
     return game_state
