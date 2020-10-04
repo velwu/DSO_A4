@@ -165,7 +165,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
         print("My move move: ", test)
 
 
-        move_str = str(next_game_state["Lines"][-1]) + "," + str(sam_vel_rajath_move[1])
+        move_str = str(selected_game_state["Lines"][-1]) + "," + str(sam_vel_rajath_move[1])
 
         print(move_str, type(move_str))
         selected_game_state["Lines"].append(move_str)
