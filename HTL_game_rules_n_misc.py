@@ -117,7 +117,8 @@ def make_a_move_randomly(game_state, board_coordinates):
             if intersection == True:
                 break
         if intersection == False:
-            game_state["Lines"].append(str(coordinates))
+            #game_state["Lines"].append(str(coordinates))
+            game_state["Lines"].append(coordinates)
             print(game_state, coordinates)
             return game_state, coordinates
     print("No Valid moves from present state")
@@ -195,6 +196,7 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
 
     else:
         print("INVALID MOVE: NO CHANGES MADE")
+        return None
 
     return game_state, move_syntax
     # print(game_state)
