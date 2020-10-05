@@ -107,20 +107,20 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
                 # "(0,0),(1,1)"
                 # here is where we get the enemy move, which we can take as input
                 # try:
-                # if result['history'] != []:
-                #     print(result['history'])
-                #     previous_move = result["history"][0]["move"]
+                if result['history'] != []:
+                    print(result['history'])
+                    previous_move = result["history"][0]["move"]
                 # #     r_move = previous_move.replace("),(", ") (")
                 # #     re_move = r_move.split(" ")
                 # #     # print("Results for last move: ", re_move, type(re_move))
                 # #     for r in re_move:
-                #     selected_game_state["Lines"].append(previous_move)
+                    selected_game_state["Lines"].append(previous_move)
                 #     print("Current Game State: ", selected_game_state)
                 #     print()
-                # else:
-                #     continue
-            except KeyError:
-                print("Other Player not connected yet")
+                else:
+                    continue
+            # except KeyError:
+            #     print("Other Player not connected yet")
             except json.decoder.JSONDecodeError:
                 print('Unexpected Server Response. Not valid JSON.')
                 sleep(15)
@@ -155,7 +155,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
         # call move functions, with game state and play move as args
 
         if game_play == "computer":
-            # custom_coords, height_limit, width_limit = create_board(4, 4)
+            custom_coords, height_limit, width_limit = create_board(4, 4)
 
             selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
                 selected_game_state, custom_coords)
@@ -229,8 +229,8 @@ if __name__ == '__main__':
 
     opt = docopt.docopt(__doc__)
     # print(opt)
-    netid = opt.get('<swalkow2>')
-    player_key = opt.get('<00df74a2d9b9>')
-    game_server = opt.get('https://jweible.web.illinois.edu/pz-server/games/')
+    netid = opt.get('<netid>')
+    player_key = opt.get('<player_key>')
+    game_server = opt.get('--server')
 
     play_rps(game_server, netid, player_key)
