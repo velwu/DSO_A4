@@ -65,7 +65,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     for g in result:
         print(result)
         print(g['fullname'])
-        if (g['category'] == 'hold_that_line' or 'Hold That Line' in g['fullname'].lower()):
+        if (g['category'] == 'hold_that_line' or 'Hold That Line' in g['fullname'].lower()) or g['id'] == 6:
             game_id = g['id']
 
     if game_id:
@@ -85,6 +85,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # This game has multiple "rounds" or "turns".  So loop through a
     # sequence of alternating between requests "await-turn" and "move":
 
+    custom_coords, height_limit, width_limit = create_board(4, 4)
     # create the game state
     game_state_example_0 = {
         "Lines": [],
@@ -103,20 +104,21 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             try:
                 result = await_turn.json()["result"]
                 print("Enemy move: ", result)
+                # "(0,0),(1,1)"
                 # here is where we get the enemy move, which we can take as input
                 # try:
-                if result['history'] != []:
-                    print(result['history'])
-                    previous_move = result["history"][0]["move"]
-                #     r_move = previous_move.replace("),(", ") (")
-                #     re_move = r_move.split(" ")
-                #     # print("Results for last move: ", re_move, type(re_move))
-                #     for r in re_move:
-                    selected_game_state["Lines"].append(previous_move)
+                # if result['history'] != []:
+                #     print(result['history'])
+                #     previous_move = result["history"][0]["move"]
+                # #     r_move = previous_move.replace("),(", ") (")
+                # #     re_move = r_move.split(" ")
+                # #     # print("Results for last move: ", re_move, type(re_move))
+                # #     for r in re_move:
+                #     selected_game_state["Lines"].append(previous_move)
                 #     print("Current Game State: ", selected_game_state)
                 #     print()
-                else:
-                    continue
+                # else:
+                #     continue
             except KeyError:
                 print("Other Player not connected yet")
             except json.decoder.JSONDecodeError:
@@ -153,7 +155,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
         # call move functions, with game state and play move as args
 
         if game_play == "computer":
-            custom_coords, height_limit, width_limit = create_board(4, 4)
+            # custom_coords, height_limit, width_limit = create_board(4, 4)
 
             selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
                 selected_game_state, custom_coords)
@@ -164,7 +166,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             # print(move_str, type(move_str))
             # selected_game_state["Lines"].append(move_str)
             # # this will be sent to the server
-            move_instruction = coordinates
+            move_instruction = coordinates #"(0,0),(1,1)"
             print("\nSending my choice of", move_instruction)
 
             submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
@@ -227,8 +229,8 @@ if __name__ == '__main__':
 
     opt = docopt.docopt(__doc__)
     # print(opt)
-    netid = opt.get('<netid>')
-    player_key = opt.get('<player_key>')
-    game_server = opt.get('--server')
+    netid = opt.get('<swalkow2>')
+    player_key = opt.get('<00df74a2d9b9>')
+    game_server = opt.get('https://jweible.web.illinois.edu/pz-server/games/')
 
     play_rps(game_server, netid, player_key)
