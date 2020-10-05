@@ -116,7 +116,7 @@ def make_a_move_randomly(game_state, board_coordinates):
     intersection = False
     position = choice([0, 1])
     if len(game_state['Lines']) == 0:
-        game_state['Lines'].append((0, 0))
+        game_state['Lines'].append((possible_coordinates[0]))
         game_state['Lines'].append(possible_coordinates[1])
         print(game_state['Lines'], formatter(
             game_state["Lines"][0], game_state["Lines"][1]))

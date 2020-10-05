@@ -103,22 +103,22 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             print()
             try:
                 result = await_turn.json()["result"]
-                print("Enemy move: ", result)
+                # print("Enemy move: ", result)
                 # "(0,0),(1,1)"
                 # here is where we get the enemy move, which we can take as input
                 # try:
-                if result['history'] != []:
-                    print(result['history'])
-                    previous_move = result["history"][0]["move"]
-                # #     r_move = previous_move.replace("),(", ") (")
-                # #     re_move = r_move.split(" ")
-                # #     # print("Results for last move: ", re_move, type(re_move))
-                # #     for r in re_move:
-                    selected_game_state["Lines"].append(previous_move)
+                # if result['history'] != []:
+                #     print(result['history'])
+                #     previous_move = result["history"][0]["move"]
+                # # #     r_move = previous_move.replace("),(", ") (")
+                # # #     re_move = r_move.split(" ")
+                # # #     # print("Results for last move: ", re_move, type(re_move))
+                # # #     for r in re_move:
+                #     selected_game_state["Lines"].append(previous_move)
                 #     print("Current Game State: ", selected_game_state)
                 #     print()
-                else:
-                    continue
+                # else:
+                #     continue
             # except KeyError:
             #     print("Other Player not connected yet")
             except json.decoder.JSONDecodeError:
@@ -160,12 +160,10 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
                 selected_game_state, custom_coords)
 
-            # move_str = str(
-            #     selected_game_state["Lines"][-1]) + "," + str(sam_vel_rajath_move[1])
+            if coordinates == None:
+                print("no more moves!")
+                break
 
-            # print(move_str, type(move_str))
-            # selected_game_state["Lines"].append(move_str)
-            # # this will be sent to the server
             move_instruction = coordinates #"(0,0),(1,1)"
             print("\nSending my choice of", move_instruction)
 
@@ -174,6 +172,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
             move_result = submit_move.json()["result"]
             print(move_result)
+
             if move_result["match_status"] in ["game over", "scored, final"]:
                 print('Game over?  Who won?')
                 break
@@ -214,13 +213,15 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
             move_result = submit_move.json()["result"]
             print(move_result)
-            if move_result["match_status"] in ["game over", "scored, final"]:
-                print('Game over?  Who won?')
-                break
+            
 
-            """Insert a small delay to reduce the chance of cPanel server throttling 
-            this client, and to simulate the "thinking time" of a more challenging game."""
-            sleep(3)
+        if move_result["match_status"] in ["game over", "scored, final"]:
+            print('Game over?  Who won?')
+            break
+
+        """Insert a small delay to reduce the chance of cPanel server throttling 
+        this client, and to simulate the "thinking time" of a more challenging game."""
+        sleep(3)
 
     return
 
