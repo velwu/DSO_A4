@@ -18,4 +18,4 @@ Vel (Tien-Yun) Wu / velwu / tienyun2
 https://learn.illinois.edu/mod/assign/view.php?id=4826928
 
 
-![Snapshot Image 1](https://github.com/velwu/DSO_A4/blob/master/TTT_image_for_fun.jpg)
+![Snapshot Image 1](HTL_image_just_for_fun.png)
