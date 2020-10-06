@@ -95,7 +95,7 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     selected_game_state = game_state_example_0
 
 
-    game_over = False
+    # game_over = False
     while True:
         # wait for my turn:
         while True:
@@ -113,18 +113,18 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
                 # "(0,0),(1,1)"
                 # here is where we get the enemy move, which we can take as input
                 # try:
-                # if result['history'] != []:
-                #     print(result['history'])
-                #     previous_move = result["history"][0]["move"]
+                if result['history'] != []:
+                    print(result['history'])
+                    previous_move = result["history"][0]["move"]
                 # # # # #     r_move = previous_move.replace("),(", ") (")
                 # # # # #     re_move = r_move.split(" ")
                 # # # # #     # print("Results for last move: ", re_move, type(re_move))
                 # # # # #     for r in re_move:
-                #     selected_game_state["Lines"].append(previous_move)
+                    selected_game_state["Lines"].append(previous_move)
                 # #     print("Current Game State: ", selected_game_state)
                 # #     print()
-                # else:
-                #     continue
+                else:
+                    continue
             # except KeyError:
             #     print("Other Player not connected yet")
             except json.decoder.JSONDecodeError:
@@ -183,11 +183,12 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
         if coordinates == None:
             print("no more moves! you won!")
             move_result["match_status"] == "game over"
+            break
         
-            if move_result["match_status"] in ["game over", "scored, final"]:
-                print('Game over?  Who won?')
-                print()
-                break
+            # if move_result["match_status"] in ["game over", "scored, final"]:
+            #     print('Game over?  Who won?')
+            #     print()
+            #     break
 
 
         sleep(3)
