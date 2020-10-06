@@ -27,6 +27,7 @@ from time import sleep
 import logging
 import HTL_game_rules_n_misc as game_rules_n_misc
 import copy
+import re
 # logging.basicConfig(level=logging.DEBUG)
 
 
@@ -36,6 +37,26 @@ def create_board(height, width):
         for w in range(width):
             board_as_list.append((h, w))
     return board_as_list, height, width
+
+
+# @staticmethod
+def parse_move(move: str) -> tuple:
+    """In this game, a move looks like "(0,1),(2,3)". This function      
+    simply extracts the 4 coordinates (and makes sure they're ints).  
+    """
+    match = re.fullmatch(r'\(?\((\d+),\s*(\d+)\),\s*\((\d+),\s*(\d+)\)\)?', move.strip())
+    if not match:
+        return False
+    try:
+        r1 = int(match.group(1))
+        c1 = int(match.group(2))
+        r2 = int(match.group(3))         
+        c2 = int(match.group(4))      
+          
+    except ValueError:         
+    # somehow a number isn't an int?         
+        return (None, None), (None, None)     
+    return r1, c1, r2, c2
 
 
 def play_rps(game_server_url: str, netid: str, player_key: str):
@@ -106,27 +127,34 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             print()
             try:
                 result = await_turn.json()["result"]
-                # if coordinates == None:
-                #     result["match_status"] = "game over"
-                #     break
-                # print("Enemy move: ", result)
-                # "(0,0),(1,1)"
-                # here is where we get the enemy move, which we can take as input
-                # try:
+
+                # last_move_opp =
+
+                # grab turn number
+                # determine_turn = result["current_player_turn"]
+
+                result_to_submit = parse_move(result["history"][0]["move"])
+                print(result_to_submit)
+                # if result_to_submit in selected_game_state["Lines"]:
+
+
+                # if game_over:
+                #     print("game over")
+                #     result["match_status"] == "game over"
+                #     return
+
                 if result['history'] != []:
-                    print(result['history'])
-                    previous_move = result["history"][0]["move"]
-                # # # # #     r_move = previous_move.replace("),(", ") (")
-                # # # # #     re_move = r_move.split(" ")
-                # # # # #     # print("Results for last move: ", re_move, type(re_move))
-                # # # # #     for r in re_move:
-                    selected_game_state["Lines"].append(previous_move)
-                # #     print("Current Game State: ", selected_game_state)
-                # #     print()
+                    result_to_submit = parse_move(result_to_submit)
+                    print(result_to_submit)
+                #     # print(result['history'])
+                #     results_r = result['history'][0]["move"].replace("),(", "), (")
+                #     results_s = results_r.split(", ")
+                #     for res in results_s:
+                #         selected_game_state["Lines"].append(eval(res))
+                #
                 else:
                     continue
-            # except KeyError:
-            #     print("Other Player not connected yet")
+
             except json.decoder.JSONDecodeError:
                 print('Unexpected Server Response. Not valid JSON.')
                 sleep(15)
@@ -158,8 +186,6 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
         # submit my move:
 
-        # call move functions, with game state and play move as args
-
         # if game_play == "computer":
         custom_coords, height_limit, width_limit = create_board(4, 4)
 
@@ -172,23 +198,20 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
         submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
                                 json={"move": move_instruction})
 
-        # end_move = session.post(url=game_server_url + "match/{}/end_match".format(match_id),
-        #                            json={"match_status": "game_over"})
-
-        # print(end_move.json()["match_status"])
-
         move_result = submit_move.json()["result"]
-        print(move_result)
+        print("move result: ", move_result)
+        print("game state: ", selected_game_state)
 
-        if coordinates == None:
-            print("no more moves! you won!")
-            move_result["match_status"] == "game over"
-            break
+        # if coordinates == None:
+        #     print("no more moves! you won!")
+        #     move_result["match_status"] == "game_over"
+        #     game_over = True
+        #     break
         
-            # if move_result["match_status"] in ["game over", "scored, final"]:
-            #     print('Game over?  Who won?')
-            #     print()
-            #     break
+        if move_result["match_status"] in ["game over", "scored, final"]:
+            print('Game over?  Who won?')
+            print()
+            break
 
 
         sleep(3)
