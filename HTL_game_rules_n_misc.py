@@ -10,15 +10,7 @@ from random import shuffle, choice
 
 # one line drawn by any player is represented as: [(0,0), (0,1), (0,2), (0,3)], [(2,0), (2,1), (2,2), (2,3)], etc.
 
-# TODO: Build a game rule on this data structure:
 # It is assumed that everything in the game_state is a legal move
-
-# For learning: "(0,0),(2,1)" : 50
-
-# "".join(game_state)
-
-# only look back one turn
-# move_syntax = "(0,0),(2,1)"
 
 # Steps:
 # 1. A function that deals with the geometrical problem of intersections
@@ -27,10 +19,6 @@ from random import shuffle, choice
 
 # 2. A function that searches for legal moves (thru rule of elimination)
 # - When there is 0 legal move left, the game is over
-
-# 3. Do not reinvent the wheel. Line 111 in https://github.com/iSchool-597DS/GameClientExamples/blob/master/play_rps.py
-# is exactly what we are expected to expand on
-
 
 # References used:
 # - https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
@@ -75,7 +63,6 @@ def IsOverlapping(A, B, C):
 
     return True
 
-
 # Return true if line segments AB and CD intersect
 def intersect(A, B, C, D):
     # return counter_clockwise(A, C, D) != counter_clockwise(B, C, D) \
@@ -91,6 +78,12 @@ def intersect(A, B, C, D):
 
     return False
 
+def create_board(height, width):
+    board_as_list = []
+    for h in range(height):
+        for w in range(width):
+            board_as_list.append((h, w))
+    return board_as_list, height, width
 
 def formatter(a, b):
     return str(a).replace(" ", "")+","+str(b).replace(" ", "")

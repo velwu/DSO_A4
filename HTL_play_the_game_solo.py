@@ -1,7 +1,7 @@
 import HTL_game_rules_n_misc as game_rules_n_misc
 import time
 import copy
-from play_rpstest import create_board
+from HTL_game_rules_n_misc import create_board
 """
 RUN THIS FILE USING PYCHARM OR OTHER PYTHON INTERPRETERS
 Modes and what do they do:
@@ -124,10 +124,10 @@ elif test_input == "demo":
     except:
         print("Unknown input format. Assuming default 4 by 4 settings.")
         custom_coords, height_limit, width_limit = create_board(4, 4)
-    #print("Loading game state 0")
-    #selected_game_state = game_state_example_0
-    print("Loading game state 3")
-    selected_game_state = game_state_example_3
+    print("Loading game state 0")
+    selected_game_state = game_state_example_0
+    #print("Loading game state 3")
+    #selected_game_state = game_state_example_3
     while True:
         selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
             selected_game_state, custom_coords)
