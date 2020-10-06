@@ -3,6 +3,9 @@ This is a group assignment repo for IS 597 DSO FA20 A5 - A game AI for peer & hu
 
 The *Work distribution* part briefly summarizes how our members collaborated.
 
+Link to GitHub:
+https://github.com/velwu/DSO_A4-A5/tree/A5_final
+
 ### Team members: (Name / GitHub ID / NetID)
 Samantha Walkow / samwalkow / swalkow2
 
