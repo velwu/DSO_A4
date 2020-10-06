@@ -1,6 +1,8 @@
 # DSO_A5
 This is a group assignment repo for IS 597 DSO FA20 A5 - A game AI for peer & human competition
 
+The *Work distribution* part briefly summarizes how our members collaborated.
+
 ### Team members: (Name / GitHub ID / NetID)
 Samantha Walkow / samwalkow / swalkow2
 
