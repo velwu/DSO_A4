@@ -38,6 +38,16 @@ def create_board(height, width):
             board_as_list.append((h, w))
     return board_as_list, height, width
 
+def parse_string(move):
+    moves_acc = []
+    for index, m in enumerate(move):
+        try:
+            moves_int = int(m)
+            moves_acc.append(moves_int)
+        except ValueError:
+            pass
+    return (moves_acc[0], moves_acc[1]), (moves_acc[2], moves_acc[3])
+
 
 # @staticmethod
 def parse_move(move: str) -> tuple:
@@ -82,8 +92,6 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
     # search for a multi-round, 2-player "Rock, Paper, Scissors":
     game_id = False
     for g in result:
-        print(result)
-        print(g['fullname'])
         if (g['category'] == 'hold_that_line' or 'Hold That Line' in g['fullname'].lower()):
             game_id = g['id']
 
@@ -103,9 +111,6 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
     # This game has multiple "rounds" or "turns".  So loop through a
     # sequence of alternating between requests "await-turn" and "move":
-
-    # game_play = input(
-        # "Type 'human' if you would like to play as yourself, or type 'computer' if you would like the computer to play: ")
 
     custom_coords, height_limit, width_limit = create_board(4, 4)
     # create the game state
@@ -128,29 +133,39 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             print()
             try:
                 result = await_turn.json()["result"]
-
-                # grab turn number
-                print(result["current_player_turn"])
-
-                result_to_submit = parse_move(result["history"][0]["move"])
-                print(result_to_submit)
-                # if result_to_submit in selected_game_state["Lines"]:
-
-
-                last_move_player_one = result_to_submit
-
-                if last_move_player_one != last_move_player_two:
-
-                    if result['history'] != []:
-                        
-                        result_to_submit = parse_move(result_to_submit)
-                        print(result_to_submit)
-                
-                    else:
-                        continue
+                if result["match_status"] == "awaiting more player(s)":
+                    print('match has not started yet. sleeping a bit...')
+                    sleep(5)
 
                 else:
-                    print("that is the last players move")
+
+                    if result['history'] != []:
+
+                        # grab turn number
+                        print("The current player is: ", result["current_player_turn"])
+
+                        last_move_player_one = result["history"][0]["move"]
+
+                        result_to_parse = parse_string(result["history"][0]["move"])
+                        # result_to_submit = result_to_parse[0]
+                        print("test: ", result_to_parse)
+
+                        if last_move_player_one == None and last_move_player_two == None:
+                            selected_game_state["Lines"].append(result_to_parse[0])
+                            selected_game_state["Lines"].append(result_to_parse[1])
+                            print(selected_game_state)
+
+                        elif last_move_player_one != last_move_player_two:
+                            selected_game_state["Lines"].append(result_to_parse[0])
+                            selected_game_state["Lines"].append(result_to_parse[1])
+                            print(selected_game_state)
+
+                        else:
+                            print("that is the last players move")
+
+                    else:
+                        last_move_player_one = None
+                        continue
 
             except json.decoder.JSONDecodeError:
                 print('Unexpected Server Response. Not valid JSON.')
@@ -182,8 +197,6 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
         # Ok, now it's my turn...
 
         # submit my move:
-        
-        custom_coords, height_limit, width_limit = create_board(4, 4)
 
         selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
             selected_game_state, custom_coords)
