@@ -113,39 +113,14 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
             print()
             try:
                 result = await_turn.json()["result"]
+
                 if result["match_status"] == "awaiting more player(s)":
                     print('match has not started yet. sleeping a bit...')
+
                     sleep(5)
+                    continue
 
-                else:
 
-                    if result['history'] != []:
-
-                        # grab turn number
-                        print("The current player is: ", result["current_player_turn"])
-
-                        last_move_player_one = result["history"][0]["move"]
-
-                        result_to_parse = parse_string(result["history"][0]["move"])
-                        # result_to_submit = result_to_parse[0]
-                        print("test: ", result_to_parse)
-
-                        if last_move_player_one == None and last_move_player_two == None:
-                            selected_game_state["Lines"].append(result_to_parse[0])
-                            selected_game_state["Lines"].append(result_to_parse[1])
-                            print(selected_game_state)
-
-                        elif last_move_player_one != last_move_player_two:
-                            selected_game_state["Lines"].append(result_to_parse[0])
-                            selected_game_state["Lines"].append(result_to_parse[1])
-                            print(selected_game_state)
-
-                        else:
-                            print("that is the last players move")
-
-                    else:
-                        last_move_player_one = None
-                        continue
 
             except json.decoder.JSONDecodeError:
                 print('Unexpected Server Response. Not valid JSON.')
@@ -157,6 +132,38 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
                 turn_status = result["turn_status"]
                 if turn_status == "your turn":
                     # Yea! There was much rejoicing.
+                    if result['history'] != []:
+
+                        # grab turn number
+                        print("The current player is: ", result["current_player_turn"])
+                        # print(result["history"])
+
+                        if last_move_player_one != result["history"][0]["move"]:
+                            last_move_player_one = result["history"][0]["move"]
+
+
+                            result_to_parse = parse_string(last_move_player_one)
+                            print("the opponent's last move was: ", result_to_parse)
+
+                            if selected_game_state["Lines"] != []:
+    
+                                # swap tuple, so tuple number zero is always the connecting end point
+                                if result_to_parse[1] in selected_game_state["Lines"]:
+                                    temp_result = [result_to_parse[1], result_to_parse[0]]
+                                    result_to_parse = temp_result
+                                # front or end of the sequence
+                                if result_to_parse[0] == selected_game_state["Lines"][0]:
+                                    selected_game_state["Lines"].insert(0, result_to_parse[1])
+                                else:
+                                    selected_game_state["Lines"].append(result_to_parse[1])
+                                print(selected_game_state)
+
+                            else:
+                                # append in any order if the list is empty
+                                selected_game_state["Lines"].append(result_to_parse[0])
+                                selected_game_state["Lines"].append(result_to_parse[1])
+
+
                     break  # exit the while loop.
                 if "Timed out" in turn_status:
                     print(
@@ -178,18 +185,26 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
 
         # submit my move:
 
+        copy_select_game_state = copy.deepcopy(selected_game_state)
+
         selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
             selected_game_state, custom_coords)
 
-        move_instruction = coordinates  # "(0,0),(1,1)"
-        print("\nSending my choice of", move_instruction)
 
-        last_move_player_two = move_instruction
+        if coordinates != None:
+            move_instruction = coordinates  # "(0,0),(1,1)"
+            print("\nSending my choice of", move_instruction)
 
-        if last_move_player_one != last_move_player_two:
+            last_move_player_two = move_instruction
+
 
             submit_move = session.post(url=game_server_url + "match/{}/move".format(match_id),
                                        json={"move": move_instruction})
+
+            if submit_move.json()["result"]["outcome"] == "Invalid move rejected.":
+                selected_game_state = copy_select_game_state
+                print("Game Stated reverted back one move")
+                continue
 
             move_result = submit_move.json()["result"]
             print("move result: ", move_result)
@@ -201,6 +216,13 @@ def play_rps(game_server_url: str, netid: str, player_key: str):
                 print('Game over?  Who won?')
                 print()
                 break
+
+
+        else:
+            print("no more moves")
+            # result["match_status"] == "game over"
+            break
+
 
         sleep(3)
 
