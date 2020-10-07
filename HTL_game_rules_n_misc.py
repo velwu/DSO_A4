@@ -96,8 +96,6 @@ game_state_example_1 = {
 }
 
 #print("Test inter", intersect((1, 1), (0, 1), (3, 2), (3, 1)))
-#TODO: This can be merged with Sam's create_board function to provide board_coordinates based on user input
-
 # board_coordinates = [(x, y) for x in range(4) for y in range(0, 4)]
 
 
@@ -116,7 +114,7 @@ def make_a_move_randomly(game_state, board_coordinates):
         return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
 
     if (position == 0):
-        print("Making a move at the Head")
+        print("Trying to make a move from head.")
         for coordinates in possible_coordinates:
             intersection = False
             for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
@@ -127,7 +125,7 @@ def make_a_move_randomly(game_state, board_coordinates):
             if intersection == False:
                 game_state["Lines"].insert(0, coordinates)
                 return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
-        print("No Valid moves from head")
+        print("No Valid moves from head. Trying from tail~")
         for coordinates in possible_coordinates:
             intersection = False
             for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
@@ -139,7 +137,7 @@ def make_a_move_randomly(game_state, board_coordinates):
                 game_state["Lines"].append(coordinates)
                 return game_state, formatter(game_state["Lines"][-2], game_state["Lines"][-1])
     elif (position == 1):
-        print("Making a move at the Tail")
+        print("Trying to make a move from tail.")
         for coordinates in possible_coordinates:
             intersection = False
             for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
@@ -150,7 +148,7 @@ def make_a_move_randomly(game_state, board_coordinates):
             if intersection == False:
                 game_state["Lines"].append(coordinates)
                 return game_state, formatter(game_state["Lines"][-2], game_state["Lines"][-1])
-        print("No Valid moves from tail")
+        print("No Valid moves from tail. Trying from head~")
         for coordinates in possible_coordinates:
             intersection = False
             for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
@@ -172,6 +170,16 @@ def is_game_over(game_state, board_coordinates):
     num_possible_moves = 0
     for coordinates in possible_coordinates:
         intersection = False
+        # Iterating from head of existing line
+        for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
+            intersection = intersect(
+                game_state["Lines"][0], coordinates, p1, p2)
+            if intersection == True:
+                break
+        if intersection == False:
+            num_possible_moves += 1
+
+        # Iterating from tail of existing line
         for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
             intersection = intersect(
                 game_state["Lines"][-1], coordinates, p1, p2)
@@ -179,7 +187,6 @@ def is_game_over(game_state, board_coordinates):
                 break
         if intersection == False:
             num_possible_moves += 1
-    #TODO: Evaluate whether it is better for num_possible_moves to be a list of moves instead of just a counter
 
     if num_possible_moves > 0:
         print("Still", num_possible_moves, "possible moves left.")
@@ -241,6 +248,34 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
         print("LEGAL MOVE: At tail endpoint")
         game_state["Lines"].append(move_parsed[1])
 
+    # TODO: Adding more codes to handle the tail of inputs being existing line. Verify that these work as intended
+    elif move_parsed[1] == game_state["Lines"][0] and move_parsed[0] not in game_state["Lines"]:
+        for ele_idx, ele_value in enumerate(game_state["Lines"][:-1]):
+            if intersect(game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], game_state["Lines"][0],
+                         move_parsed[0]):
+                print("INVALID MOVE: Intersecting lines!:",
+                      "Line*", game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], "*",
+                      "crossed with Line *", game_state["Lines"][0], move_parsed[0], "*")
+                #return game_state, move_syntax
+                print("Current game state:", game_state["Lines"])
+                return None
+        print("LEGAL MOVE: At head endpoint")
+        game_state["Lines"].insert(0, move_parsed[0])
+
+    elif move_parsed[1] == game_state["Lines"][-1] and move_parsed[0] not in game_state["Lines"]:
+        for ele_idx, ele_value in enumerate(game_state["Lines"][:-1]):
+            if intersect(game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], game_state["Lines"][-1],
+                         move_parsed[0]):
+                print("INVALID MOVE: Intersecting lines!:",
+                      "Line*", game_state["Lines"][ele_idx], game_state["Lines"][ele_idx + 1], "*",
+                      "crossed with Line *", game_state["Lines"][-1], move_parsed[0], "*")
+                print("Current game state:", game_state["Lines"])
+                #return game_state, move_syntax
+                return None
+        print("LEGAL MOVE: At tail endpoint")
+        game_state["Lines"].append(move_parsed[0])
+
+
     else:
         print("INVALID MOVE: NO CHANGES MADE")
         return None
@@ -251,14 +286,12 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
 
 
 def human_player_move():
-    # TODO: Complete this function
     print("Please input your moves in the form of '(x1, y1), (x2, y2)'")
     player_input = input()
     return player_input
 
 
 def visualize_game(game_state):
-    # TODO: Determine whether this thing is needed at all.
     board_for_printing = [["-", "-", "-", "-"],
                           ["-", "-", "-", "-"],
                           ["-", "-", "-", "-"],

@@ -139,13 +139,13 @@ elif test_input == "demo":
     # There are 2 computers: Clarke and Turing.
     # Clarke goes first and Turing goes second.
     cpu_1 = {
-        "computer_name": "Clarke",
+        "computer_name": "AI Clarke",
         "moves_made": [],
         "condition": None
     }
     move_p1 = None
     cpu_2 = {
-        "computer_name": "Turing",
+        "computer_name": "AI Turing",
         "moves_made": [],
         "condition": None
     }
