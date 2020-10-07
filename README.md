@@ -17,7 +17,7 @@ Vel (Tien-Yun) Wu / velwu / tienyun2
 ### Work distribution (Sep 27th /2020)
 - Samantha: Server protocols (playontheserver.py)
 - Rajath: Game rules including random move generation and input/output formatting
-- Vel: Game rules including intersection check, singleplayer game Human vs Computer (HTL_play_the_game_solo.py)
+- Vel: Game rules including intersection check, singleplayer game Human vs Computer (HTL_play_the_game_solo.py) and random move generation enhancement
 
 ### link to assignment instructions:
 https://learn.illinois.edu/mod/assign/view.php?id=4826928
