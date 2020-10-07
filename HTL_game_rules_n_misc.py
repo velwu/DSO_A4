@@ -6,6 +6,7 @@ import json
 from os import error
 from datetime import datetime
 from random import shuffle, choice
+from math import sqrt
 
 
 # one line drawn by any player is represented as: [(0,0), (0,1), (0,2), (0,3)], [(2,0), (2,1), (2,2), (2,3)], etc.
@@ -45,6 +46,12 @@ def IsCollinear(A, B, C):
     return Area2(A, B, C) == 0
 
 
+def distance(A,B):
+    return sqrt((A[1] - B[1])**2 + (A[0] - B[0])**2)
+
+def is_between(a,c,b):
+    return distance(a,c) + distance(c,b) == distance(a,b)
+
 def IsOverlapping(A, B, C):
     # Line AB is the Anchor
     crossproduct = (C[0] - A[0]) * (B[1] - A[1]) - \
@@ -71,10 +78,15 @@ def intersect(A, B, C, D):
         return True
     elif IsOnLeft(A, B, D) and IsOnRight(A, B, C):
         return True
-    elif B == C and (IsOverlapping(A, B, D) or IsOverlapping(B, D, A)):
+    elif B == C and IsOverlapping(A, B, D):
+        return True
+    elif B == C and IsOverlapping(C, D, A):
         return True
     elif A == C and IsOverlapping(A, D, B):
         return True
+    elif B == C and (is_between(C, A, D) or is_between(C, B, D) or is_between(A, D, B) or is_between(B, A, D)):
+        return True
+
 
     return False
 
@@ -205,14 +217,14 @@ def make_a_move_from_input(game_state, move_syntax, height_limit, width_limit):
         print("INVALID MOVE: Coordinates cannot be negative integers!")
         return None
 
-    if move_parsed[0][0] > height_limit or move_parsed[1][0] > height_limit:
+    if move_parsed[0][0] > height_limit - 1 or move_parsed[1][0] > height_limit - 1:
         print("INVALID MOVE: Height limit exceeded by",
-              move_parsed[0] - height_limit)
+              move_parsed[0] - (height_limit - 1))
         return None
 
-    if move_parsed[0][1] > width_limit or move_parsed[1][1] > width_limit:
+    if move_parsed[0][1] > width_limit - 1 or move_parsed[1][1] > width_limit - 1:
         print("INVALID MOVE: Width limit exceeded by",
-              move_parsed[1] - width_limit)
+              move_parsed[1] - (width_limit - 1))
         return None
 
     if len(game_state["Lines"]) == 0:

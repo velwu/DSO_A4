@@ -1,85 +1,67 @@
 "D:\Anaconda\envs\Assignmnet 3B\python.exe" "D:\UIUC MISM Studies\2020 Fall Courses\IS 597DS - Data Structures & Alg. via Puzzles & Games\Week 4\HTL_play_the_game_solo.py"
 Specify program type: play, test, or demo
-play
-Enter the height of the board: 4
-Enter the width of the board: 4
+demo
+Enter the height of the board: 5
+Enter the width of the board: 5
 Loading game state 0
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-(1,1),(3,3)
-move syntax =  1
-Move Parsed =  ((1, 1), (3, 3))
-LEGAL MOVE: First move in the game
-Current game state: [(1, 1), (3, 3)]
-Still 27 possible moves left.
-Still 27 possible moves left.
-Waiting for computer's move...
+[(4, 1), (4, 4)] (4,1),(4,4)
+AI Clarke made a move: (4,1),(4,4)
+Current game state: [(4, 1), (4, 4)]
+Still 44 possible moves left.
 Trying to make a move from head.
-Computer made a move: (1,3),(1,1)
-Current game state: [(1, 3), (1, 1), (3, 3)]
-Still 16 possible moves left.
-Still 16 possible moves left.
-It is now your turn.
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-(3,3),(4,4)
-move syntax =  3
-Move Parsed =  ((3, 3), (4, 4))
-LEGAL MOVE: At tail endpoint
-Current game state: [(1, 3), (1, 1), (3, 3), (4, 4)]
-Still 16 possible moves left.
-Still 16 possible moves left.
-Waiting for computer's move...
+AI Turing made a move: (1,2),(4,1)
+Current game state: [(1, 2), (4, 1), (4, 4)]
+Still 25 possible moves left.
+Trying to make a move from head.
+AI Clarke made a move: (0,4),(1,2)
+Current game state: [(0, 4), (1, 2), (4, 1), (4, 4)]
+Still 14 possible moves left.
 Trying to make a move from tail.
-Computer made a move: (4,4),(2,0)
-Current game state: [(1, 3), (1, 1), (3, 3), (4, 4), (2, 0)]
+AI Turing made a move: (4,4),(2,4)
+Current game state: [(0, 4), (1, 2), (4, 1), (4, 4), (2, 4)]
 Still 11 possible moves left.
-Still 11 possible moves left.
-It is now your turn.
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-(2,1),(2,0)
-move syntax =  2
-Move Parsed =  ((2, 1), (2, 0))
-LEGAL MOVE: At tail endpoint
-Current game state: [(1, 3), (1, 1), (3, 3), (4, 4), (2, 0), (2, 1)]
-Still 5 possible moves left.
-Still 5 possible moves left.
-Waiting for computer's move...
+Trying to make a move from tail.
+AI Clarke made a move: (2,4),(1,4)
+Current game state: [(0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4)]
+Still 14 possible moves left.
+Trying to make a move from tail.
+AI Turing made a move: (1,4),(1,3)
+Current game state: [(0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3)]
+Still 10 possible moves left.
+Trying to make a move from tail.
+AI Clarke made a move: (1,3),(1,0)
+Current game state: [(0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0)]
+Still 12 possible moves left.
 Trying to make a move from head.
-Computer made a move: (0,0),(1,3)
-Current game state: [(0, 0), (1, 3), (1, 1), (3, 3), (4, 4), (2, 0), (2, 1)]
+AI Turing made a move: (0,1),(0,4)
+Current game state: [(0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0)]
+Still 7 possible moves left.
+Trying to make a move from tail.
+AI Clarke made a move: (1,0),(4,0)
+Current game state: [(0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0), (4, 0)]
 Still 6 possible moves left.
+Trying to make a move from head.
+AI Turing made a move: (0,0),(0,1)
+Current game state: [(0, 0), (0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0), (4, 0)]
 Still 6 possible moves left.
-It is now your turn.
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-(0,1),
-move syntax =  0
-Move Parsed =  ((0, 1),)
-Input format must be (x1, y1),(x2,y2) and within height/width limits. Try again!
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-(0,0),(0,1)
-f
-move syntax =  0
-Move Parsed =  ((0, 0), (0, 1))
-LEGAL MOVE: At head endpoint
-Current game state: [(0, 1), (0, 0), (1, 3), (1, 1), (3, 3), (4, 4), (2, 0), (2, 1)]
-Still 2 possible moves left.
-Still 2 possible moves left.
-Waiting for computer's move...
+Trying to make a move from head.
+AI Clarke made a move: (2,0),(0,0)
+Current game state: [(2, 0), (0, 0), (0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0), (4, 0)]
+Still 3 possible moves left.
+Trying to make a move from tail.
+AI Turing made a move: (4,0),(4,3)
+Current game state: [(2, 0), (0, 0), (0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0), (4, 0), (4, 3)]
+Still 1 possible moves left.
 Trying to make a move from tail.
 No Valid moves from tail. Trying from head~
-Computer made a move: (0,2),(0,1)
-Current game state: [(0, 2), (0, 1), (0, 0), (1, 3), (1, 1), (3, 3), (4, 4), (2, 0), (2, 1)]
-Still 1 possible moves left.
-Still 1 possible moves left.
-It is now your turn.
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-Input format must be (x1, y1),(x2,y2) and within height/width limits. Try again!
-Input command: "(x1, y1),(x2,y2)"  or type Q to quit 
-(0,2),(0,3)
-move syntax =  0
-Move Parsed =  ((0, 2), (0, 3))
-LEGAL MOVE: At head endpoint
-Current game state: [(0, 3), (0, 2), (0, 1), (0, 0), (1, 3), (1, 1), (3, 3), (4, 4), (2, 0), (2, 1)]
+AI Clarke made a move: (3,0),(2,0)
+Current game state: [(3, 0), (2, 0), (0, 0), (0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0), (4, 0), (4, 3)]
 No possible moves left. The game is over.
-No more potential moves left. The computer has won.
+No possible moves left. The game is over.
+The game concludes.
+Final game state: [(3, 0), (2, 0), (0, 0), (0, 1), (0, 4), (1, 2), (4, 1), (4, 4), (2, 4), (1, 4), (1, 3), (1, 0), (4, 0), (4, 3)]
+AI Turing Wins
+AI Clarke 's moves: ['(4,1),(4,4)', '(0,4),(1,2)', '(2,4),(1,4)', '(1,3),(1,0)', '(1,0),(4,0)', '(2,0),(0,0)', '(3,0),(2,0)']
+AI Turing 's moves: ['(1,2),(4,1)', '(4,4),(2,4)', '(1,4),(1,3)', '(0,1),(0,4)', '(0,0),(0,1)', '(4,0),(4,3)']
 
 Process finished with exit code 0

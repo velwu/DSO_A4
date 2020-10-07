@@ -39,10 +39,10 @@ game_state_example_3 = {
 print("Specify program type: play, test, or demo")
 test_input = input()
 if test_input == "test":
-    # Test 0, 1, 2, 5 should pass, while 3 and 4 should fail
+    # Test 0, 1, 2, 5 should pass, while 3, 4 should fail
     print("Test 0")
     test_0 = game_rules_n_misc.make_a_move_from_input(
-        game_state_example_0, "(1,1), (4,4)", 4, 4)
+        game_state_example_0, "(1,1), (3,3)", 4, 4)
     print("move made:", str(test_0[1]),
           "; Current State:", test_0[0]["Lines"], "\n")
 
@@ -183,3 +183,6 @@ elif test_input == "demo":
             print(cpu_1["computer_name"], "'s moves:", cpu_1["moves_made"])
             print(cpu_2["computer_name"], "'s moves:", cpu_2["moves_made"])
             break
+
+else:
+    print("COMMAND NOT RECOGNIZED. SHUTTING DOWN.")
