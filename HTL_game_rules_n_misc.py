@@ -127,8 +127,17 @@ def make_a_move_randomly(game_state, board_coordinates):
             if intersection == False:
                 game_state["Lines"].insert(0, coordinates)
                 return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
-        print("No Valid moves from present state")
-
+        print("No Valid moves from head")
+        for coordinates in possible_coordinates:
+            intersection = False
+            for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
+                intersection = intersect(
+                    game_state["Lines"][-1], coordinates, p1, p2)
+                if intersection == True:
+                    break
+            if intersection == False:
+                game_state["Lines"].append(coordinates)
+                return game_state, formatter(game_state["Lines"][-2], game_state["Lines"][-1])
     elif (position == 1):
         print("Making a move at the Tail")
         for coordinates in possible_coordinates:
@@ -140,6 +149,17 @@ def make_a_move_randomly(game_state, board_coordinates):
                     break
             if intersection == False:
                 game_state["Lines"].append(coordinates)
+                return game_state, formatter(game_state["Lines"][-2], game_state["Lines"][-1])
+        print("No Valid moves from tail")
+        for coordinates in possible_coordinates:
+            intersection = False
+            for p1, p2 in zip(game_state["Lines"][::-1][:-1], game_state["Lines"][::-1][1:]):
+                intersection = intersect(
+                    game_state["Lines"][0], coordinates, p1, p2)
+                if intersection == True:
+                    break
+            if intersection == False:
+                game_state["Lines"].insert(0, coordinates)
                 return game_state, formatter(game_state["Lines"][0], game_state["Lines"][1])
         print("No Valid moves from present state")
     return game_state, None

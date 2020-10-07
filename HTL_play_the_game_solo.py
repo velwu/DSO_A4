@@ -90,8 +90,6 @@ elif test_input == "play":
     while True:
         player_input = input(
             'Input command: "(x1, y1),(x2,y2)"  or type Q to quit \n')
-        #TODO: Enforce a input type check somewhere~~
-        #TODO: Create a dimension limit based on player input (essentially play_rptest.create_board())
         if player_input in ['q', 'Q']:
             print("Guess we're done here. Bye!")
             break
@@ -106,13 +104,22 @@ elif test_input == "play":
             continue
         selected_game_state = next_game_state
         print("Current game state:", selected_game_state["Lines"])
-        print("Waiting for computer's move...")
-        time.sleep(2)
-        selected_game_state = game_rules_n_misc.make_a_move_randomly(
-            selected_game_state, custom_coords)[0]
-        print("Computer made a move")
+        if game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == True:
+            print("No more potential moves left. The computer has won.")
+            break
+        elif game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == False:
+           print("Waiting for computer's move...")
+        # time.sleep(2)
+        selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
+            selected_game_state, custom_coords)
+        print("Computer made a move:", coordinates)
         print("Current game state:", selected_game_state["Lines"])
-        continue
+        if game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == True:
+            print("No more potential moves left. You have won. Congratulations!")
+            break
+        elif game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == False:
+            print("It is now your turn.")
+            continue
 #make_a_move_from_input(game_state_example, "(1,2),(0,3)")
 
 #print(intersect((0,0), (2,1), (1,1), (2,0)))\
@@ -128,16 +135,51 @@ elif test_input == "demo":
     selected_game_state = game_state_example_0
     #print("Loading game state 3")
     #selected_game_state = game_state_example_3
+    is_Turings_turn = -1
+    # There are 2 computers: Clarke and Turing.
+    # Clarke goes first and Turing goes second.
+    cpu_1 = {
+        "computer_name": "Clarke",
+        "moves_made": [],
+        "condition": None
+    }
+    move_p1 = None
+    cpu_2 = {
+        "computer_name": "Turing",
+        "moves_made": [],
+        "condition": None
+    }
+    move_p2 = None
     while True:
-        selected_game_state, coordinates = game_rules_n_misc.make_a_move_randomly(
-            selected_game_state, custom_coords)
-        print("Computer made a move")
-        #print(selected_game_state)
-        #print(type(selected_game_state["Lines"]))
+        if is_Turings_turn == -1:
+            # time.sleep(1)
+            selected_game_state, move_p1 = game_rules_n_misc.make_a_move_randomly(
+                selected_game_state, custom_coords)
+            cpu_1["moves_made"].append(move_p1)
+            print(cpu_1["computer_name"], "made a move:", move_p1)
+        if is_Turings_turn == 1:
+            # time.sleep(1)
+            selected_game_state, move_p2 = game_rules_n_misc.make_a_move_randomly(
+                selected_game_state, custom_coords)
+            cpu_2["moves_made"].append(move_p2)
+            print(cpu_2["computer_name"], "made a move:", move_p2)
         print("Current game state:", selected_game_state["Lines"])
         if game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == False:
+            is_Turings_turn *= -1
             continue
         elif game_rules_n_misc.is_game_over(selected_game_state, custom_coords)[0] == True:
             print("The game concludes.")
             print("Final game state:", selected_game_state["Lines"])
+
+            if is_Turings_turn == -1:
+                cpu_1["condition"] = "Loss"
+                cpu_2["condition"] = "Win"
+                print(cpu_2["computer_name"], "Wins")
+            elif is_Turings_turn == 1:
+                cpu_1["condition"] = "Win"
+                cpu_2["condition"] = "Loss"
+                print(cpu_1["computer_name"], "Wins")
+
+            print(cpu_1["computer_name"], "'s moves:", cpu_1["moves_made"])
+            print(cpu_2["computer_name"], "'s moves:", cpu_2["moves_made"])
             break
